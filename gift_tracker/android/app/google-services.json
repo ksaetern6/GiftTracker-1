@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "682248795992",
+    "firebase_url": "https://gifttracker-b57da.firebaseio.com",
+    "project_id": "gifttracker-b57da",
+    "storage_bucket": "gifttracker-b57da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682248795992:android:f0d02a9b9e83c0a0",
+        "android_client_info": {
+          "package_name": "com.example.gift_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682248795992-susu41n6glm14303plknjc93cnljieje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkz-dRjgMpMl45hkRjHbauvEtHjTUa9bQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
