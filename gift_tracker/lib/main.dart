@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'NavDrawer.dart';
+import 'Gift.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,13 +35,15 @@ class _HomePage extends State<HomePage>
         title: Text("Simple UI App"),
       ),
 
+      drawer: NavDrawer(),
+
       body: Center(
         child: Column(
           children: <Widget>[
             RaisedButton(
               child: Text("Sign Up"),
-              //onPressed: //TODO sign up using google account,
-            )
+              onPressed: () => print("sign up")//TODO sign up using google account,
+            ),
           ],
         )
       )
