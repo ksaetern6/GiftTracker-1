@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
 import 'Gift.dart';
 import 'AddGiftPage.dart';
@@ -9,12 +10,11 @@ class GiftListPage extends StatefulWidget
   _GiftListPage createState() => _GiftListPage();
 }
 
-// page to add, track, and edit goals
 class _GiftListPage extends State<GiftListPage>
 {
   // -- Variables -- //
 
-  List<Gift> gifts = [];
+  List<Gift> gifts = []; //TODO this should be somewhere else. own class maybe?
 
   // -- Functions -- //
   _goToAddGiftPage()
@@ -70,10 +70,19 @@ class _GiftListPage extends State<GiftListPage>
 
   @override
   Widget build(BuildContext context) {
+    // forces portrait usage of this page/widget
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => _goToAddGiftPage()
+        onPressed: () => {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) => new AddGiftPage()))
+        }
       ),
 
       appBar: AppBar(

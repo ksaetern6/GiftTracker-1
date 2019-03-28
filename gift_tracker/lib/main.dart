@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
-import 'Gift.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -30,9 +31,15 @@ class _HomePage extends State<HomePage>
 {
   @override
   Widget build(BuildContext context) {
+    // forces portrait usage of this page/widget
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Simple UI App"),
+        title: Text("GiftTracker"),
       ),
 
       drawer: NavDrawer(),
