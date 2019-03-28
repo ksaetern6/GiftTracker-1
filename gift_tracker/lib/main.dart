@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'auth.dart';
 import 'NavDrawer.dart';
 
 
@@ -29,6 +30,7 @@ class HomePage extends StatefulWidget
 
 class _HomePage extends State<HomePage>
 {
+  AuthGoogle authService = AuthGoogle();
   @override
   Widget build(BuildContext context) {
     // forces portrait usage of this page/widget
@@ -47,14 +49,25 @@ class _HomePage extends State<HomePage>
       body: Center(
         child: Column(
           children: <Widget>[
+
+            //element 1
+            //add a function to open a new page for google SignIn
             RaisedButton(
-              child: Text("Sign Up"),
-              onPressed: () => print("sign up")//TODO sign up using google account,
+              child: Text("Sign In"),
+              onPressed: () => authService.googleSignIn(),
             ),
+
+            //element 2
+            RaisedButton(
+              child: Text("Sign Out"),
+              onPressed: () => authService.signOut(),
+            ),
+
           ],
         )
       )
 
     );
   }
-}
+
+}//_HomePage
