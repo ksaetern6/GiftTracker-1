@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'Gift.dart';
+import 'GiftList.dart';
 
 class AddGiftPage extends StatefulWidget
 {
@@ -11,6 +11,7 @@ class AddGiftPage extends StatefulWidget
 class _AddGiftPage extends State<AddGiftPage>
 {
   // -- Variables -- //
+
   //TODO Is there a better way to do this? So many controllers is annoying
   final giftNameController = new TextEditingController();
   final giftDescriptionController = new TextEditingController();
@@ -26,7 +27,23 @@ class _AddGiftPage extends State<AddGiftPage>
   final FocusNode giftPriorityFocus = FocusNode();
   final FocusNode giftPriceFocus = FocusNode();
 
+  var tempList = new GiftList();
+
   // -- Functions -- //
+
+  addGift()
+  {
+    tempList.addGiftToList(giftNameController.text,
+                          giftDescriptionController.text,
+                          int.parse(giftPriorityController.text),
+                          double.parse(giftPriceController.text),
+                          giftLinkController.text,
+                          giftDateAddedController.text,
+                          false);
+
+    tempList.printList(); // for checking
+
+  }
 
   // -- Main Widget Builder --//
 
@@ -117,7 +134,8 @@ class _AddGiftPage extends State<AddGiftPage>
             ],
           ),
 
-          //TODO this needs to be sure that is a double
+          //TODO this needs to have some kind of validation and a $ sign needs
+          //TODO   to be appended
           SizedBox(height: 15),
           Row(
             children: <Widget>[
@@ -144,7 +162,7 @@ class _AddGiftPage extends State<AddGiftPage>
           ),
 
           SizedBox(height: 15),
-          Row( //TODO later make this date adding automatic with the current date
+          Row( //TODO later make this automatically fill with the current date
             children: <Widget>[
               SizedBox(width: 7),
               Text("Date Added", style: TextStyle(fontSize: 20.0)),
@@ -205,9 +223,7 @@ class _AddGiftPage extends State<AddGiftPage>
             RaisedButton(
                 child: Text("Add Gift"),
                 color: Theme.of(context).accentColor,
-                onPressed: () => {
-                  //TODO add gift to gift list array
-                }
+                onPressed: () => addGift()
             )
           ],
         ),

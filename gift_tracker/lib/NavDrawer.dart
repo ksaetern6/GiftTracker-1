@@ -17,7 +17,7 @@ class NavDrawer extends StatelessWidget
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              //child: Text("Actions\n <ADD LOGIN TEXT AND PROFILE PICTURE HERE>"),
+              child: Text("DO SOMETHING HERE"), //TODO do something here
               decoration: BoxDecoration(
                   color: Colors.yellow
               ),

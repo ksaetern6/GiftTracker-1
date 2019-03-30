@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
-import 'Gift.dart';
 import 'AddGiftPage.dart';
+import 'GiftList.dart';
 
 class GiftListPage extends StatefulWidget
 {
@@ -13,15 +13,9 @@ class GiftListPage extends StatefulWidget
 class _GiftListPage extends State<GiftListPage>
 {
   // -- Variables -- //
-
-  List<Gift> gifts = []; //TODO this should be somewhere else. own class maybe?
+  var gifts = new GiftList();
 
   // -- Functions -- //
-  _goToAddGiftPage()
-  {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => new AddGiftPage()));
-  }
 
   _buildGiftsList(index)
   {
@@ -42,7 +36,7 @@ class _GiftListPage extends State<GiftListPage>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Text(
-                    gifts[index].giftName,
+                    gifts.getName(index),
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 30.0,
@@ -50,7 +44,7 @@ class _GiftListPage extends State<GiftListPage>
                     )
                   ),
                   Text(
-                    gifts[index].giftDescription,
+                    gifts.getDescription(index),
                     textAlign: TextAlign.left,
                     style: TextStyle(
                         fontSize: 20.0,
@@ -94,7 +88,7 @@ class _GiftListPage extends State<GiftListPage>
       body: Container(
         child: ListView.builder(
           itemBuilder: (context, index) => _buildGiftsList(index),
-          itemCount: gifts.length,
+          itemCount: gifts.getLengthOfList()
         )
       )
     );
