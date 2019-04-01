@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 
 //final AuthGoogle authorize = AuthGoogle();
+final AuthGoogle authService = AuthGoogle();
 
 class AuthGoogle {
   final GoogleSignIn _gSignIn = GoogleSignIn();
