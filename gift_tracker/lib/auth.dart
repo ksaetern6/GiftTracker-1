@@ -57,17 +57,21 @@ class AuthGoogle {
     //depreciated signInWithGoogle
     //We are logged into Google but not Firebase, so pass tokens into
     //Firebase to login.
-    /*
+
     AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken
     );
 
     FirebaseUser user = await _fAuth.signInWithCredential(credential);
-    */
+
+    /*
     FirebaseUser user = await _fAuth.signInWithGoogle(
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    */
     print("singed in" + user.displayName);
+
+
 
 
     //update user data in Firestore
