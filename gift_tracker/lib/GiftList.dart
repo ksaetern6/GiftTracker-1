@@ -35,7 +35,15 @@ class GiftList
 
   int getLengthOfList()
   {
+    if(giftList.isEmpty)
+      return 1;
+
     return giftList.length;
+  }
+
+  bool isListEmpty()
+  {
+    return giftList.isEmpty;
   }
 
   String getName(int index)

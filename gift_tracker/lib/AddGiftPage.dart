@@ -34,15 +34,16 @@ class _AddGiftPage extends State<AddGiftPage>
   addGift()
   {
     tempList.addGiftToList(giftNameController.text,
-                          giftDescriptionController.text,
-                          int.parse(giftPriorityController.text),
-                          double.parse(giftPriceController.text),
-                          giftLinkController.text,
-                          giftDateAddedController.text,
-                          false);
+                           giftDescriptionController.text,
+                           int.parse(giftPriorityController.text),
+                           double.parse(giftPriceController.text),
+                           giftLinkController.text,
+                           giftDateAddedController.text,
+                           false);
 
     tempList.printList(); // for checking
 
+    Navigator.pop(context);
   }
 
   // -- Main Widget Builder --//
