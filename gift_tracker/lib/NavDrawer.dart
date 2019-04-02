@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'GiftListPage.dart';
+import 'GiftList.dart';
+import 'Gift.dart';
 import 'main.dart';
 
 class NavDrawer extends StatelessWidget
@@ -41,9 +43,18 @@ class NavDrawer extends StatelessWidget
                 style: TextStyle(fontSize: 20.0),
               ),
               onTap: () {
+                //this giftList class is created here and then passed to the giftListPage,
+                // and then it is passed to the AddGiftPage. I do this because we don't want
+                // to keep creating instances of new giftLists, otherwise the gifts won't be added
+                // to the same list
+                var giftClass = new GiftList();
+                var giftList = new List<Gift>();
+
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => new GiftListPage()));
+                    builder: (context) => new GiftListPage(
+                        giftClass: giftClass, giftList: giftList
+                    )));
               },
             ),
           ],

@@ -4,19 +4,19 @@ class GiftList
 {
   // -- Variables -- //
 
-  var giftList = new List<Gift>();
+  //var giftList;
 
   // -- Functions -- //
 
-  addGiftToList(String name, String desc, int prio, double price, String date,
-                String link, bool bought)
+  addGiftToList(List<Gift> giftList, String name, String desc, int prio, double price,
+                String date, String link, bool bought)
   {
     Gift addedGift = new Gift(name, desc, prio, price, date, link, bought);
 
     giftList.add(addedGift);
   }
 
-  printList() // for checking
+  printList(List<Gift> giftList) // for checking
   {
     print(giftList.length);
 
@@ -33,7 +33,7 @@ class GiftList
 
   }
 
-  int getLengthOfList()
+  int getLengthOfList(List<Gift> giftList)
   {
     if(giftList.isEmpty)
       return 1;
@@ -41,42 +41,42 @@ class GiftList
     return giftList.length;
   }
 
-  bool isListEmpty()
+  bool isListEmpty(List<Gift> giftList)
   {
     return giftList.isEmpty;
   }
 
-  String getName(int index)
+  String getName(List<Gift> giftList, int index)
   {
     return giftList[index].getName();
   }
 
-  String getDescription(int index)
+  String getDescription(List<Gift> giftList, int index)
   {
     return giftList[index].getDescription();
   }
 
-  int getPriority(int index)
+  int getPriority(List<Gift> giftList, int index)
   {
     return giftList[index].getPriority();
   }
 
-  double getPrice(int index)
+  double getPrice(List<Gift> giftList, int index)
   {
     return giftList[index].getPrice();
   }
 
-  String getDateAdded(int index)
+  String getDateAdded(List<Gift> giftList, int index)
   {
     return giftList[index].getDateAdded();
   }
 
-  String getLink(int index)
+  String getLink(List<Gift> giftList, int index)
   {
     return giftList[index].getLink();
   }
 
-  bool getBought(int index)
+  bool getBought(List<Gift> giftList, int index)
   {
     return giftList[index].getBought();
   }

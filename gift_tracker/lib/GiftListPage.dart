@@ -3,9 +3,15 @@ import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
 import 'AddGiftPage.dart';
 import 'GiftList.dart';
+import 'Gift.dart';
 
 class GiftListPage extends StatefulWidget
 {
+  final GiftList giftClass;
+  final List<Gift> giftList;
+
+  GiftListPage({Key key, this.giftClass, this.giftList}) : super(key: key);
+
   @override
   _GiftListPage createState() => _GiftListPage();
 }
@@ -13,13 +19,13 @@ class GiftListPage extends StatefulWidget
 class _GiftListPage extends State<GiftListPage>
 {
   // -- Variables -- //
-  var gifts = new GiftList();
+  //var gifts = new GiftList();
 
   // -- Functions -- //
 
   _buildGiftsList(index)
   {
-    if(gifts.isListEmpty())
+    if(widget.giftClass.isListEmpty(widget.giftList))
       return new Center( //TODO make this something better looking
           child: Text("Your list is empty! \n"
                       "Add some gifts and they will be displayed here!",
@@ -47,7 +53,7 @@ class _GiftListPage extends State<GiftListPage>
                   children: <Widget>[
                     Text(
                       //"temp",
-                      gifts.getName(index),
+                      widget.giftClass.getName(widget.giftList, index),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 30.0,
@@ -56,7 +62,7 @@ class _GiftListPage extends State<GiftListPage>
                     ),
                     Text(
                       //"temp",
-                      gifts.getDescription(index),
+                      widget.giftClass.getDescription(widget.giftList, index),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -87,7 +93,9 @@ class _GiftListPage extends State<GiftListPage>
         child: Icon(Icons.add),
         onPressed: () => {
           Navigator.push(context, MaterialPageRoute(
-            builder: (context) => new AddGiftPage()))
+            builder: (context) => new AddGiftPage(
+                giftClass: widget.giftClass, giftList: widget.giftList
+            )))
         }
       ),
 
@@ -99,7 +107,7 @@ class _GiftListPage extends State<GiftListPage>
 
       body: Container(
         child: ListView.builder(
-          itemCount: gifts.getLengthOfList(),
+          itemCount: widget.giftClass.getLengthOfList(widget.giftList),
           itemBuilder: (BuildContext context, int index) => _buildGiftsList(index)
             //TODO i think this should be rebuilt everytime the page is brought up
         )

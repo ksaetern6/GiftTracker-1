@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'GiftList.dart';
+import 'Gift.dart';
 
 class AddGiftPage extends StatefulWidget
 {
+  final GiftList giftClass;
+  final List<Gift> giftList;
+
+  AddGiftPage({Key key, this.giftClass, this.giftList}) : super(key: key);
+
   @override
   _AddGiftPage createState() => _AddGiftPage();
 }
@@ -27,21 +33,22 @@ class _AddGiftPage extends State<AddGiftPage>
   final FocusNode giftPriorityFocus = FocusNode();
   final FocusNode giftPriceFocus = FocusNode();
 
-  var tempList = new GiftList();
+  //var tempList = new GiftList();
 
   // -- Functions -- //
 
   addGift()
   {
-    tempList.addGiftToList(giftNameController.text,
-                           giftDescriptionController.text,
-                           int.parse(giftPriorityController.text),
-                           double.parse(giftPriceController.text),
-                           giftLinkController.text,
-                           giftDateAddedController.text,
-                           false);
+    widget.giftClass.addGiftToList(widget.giftList,
+                                   giftNameController.text,
+                                   giftDescriptionController.text,
+                                   int.parse(giftPriorityController.text),
+                                   double.parse(giftPriceController.text),
+                                   giftLinkController.text,
+                                   giftDateAddedController.text,
+                                   false);
 
-    tempList.printList(); // for checking
+    widget.giftClass.printList(widget.giftList); // for checking
 
     Navigator.pop(context);
   }
@@ -112,7 +119,7 @@ class _AddGiftPage extends State<AddGiftPage>
           ),
 
           SizedBox(height: 15),
-          Row( //TODO later make this a dropdown or something better
+          Row( //TODO later make this a dropdown or slider or something better
             children: <Widget>[
               SizedBox(width: 7),
               Text("Priority (1 - 10)", style: TextStyle(fontSize: 20.0)),
