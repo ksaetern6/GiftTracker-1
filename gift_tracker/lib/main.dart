@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget
@@ -42,7 +41,7 @@ class _HomePage extends State<HomePage>
         title: Text("GiftTracker"),
       ),
 
-      drawer: NavDrawer(),
+      drawer: NavDrawer(/*giftClass, giftList*/),
 
       body: Center(
         child: Column(

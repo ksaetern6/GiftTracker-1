@@ -21,6 +21,7 @@ class _GiftListPage extends State<GiftListPage>
   // -- Variables -- //
   //var gifts = new GiftList();
 
+
   // -- Functions -- //
 
   _buildGiftsList(index)
@@ -38,6 +39,8 @@ class _GiftListPage extends State<GiftListPage>
       return new GestureDetector(
         onTap: ()
          {
+           // TODO when the gift is tapped the giftee should be able to update the gift parameters
+
            // TODO later on, ONLY the giftee should be able to tap the gift
            // TODO  and make updates it
            print("gift tapped");
@@ -45,28 +48,45 @@ class _GiftListPage extends State<GiftListPage>
         child: Container(
           padding: EdgeInsets.only(left: 10.0, top: 10.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      //"temp",
-                      widget.giftClass.getName(widget.giftList, index),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold
-                      )
+                    Column(
+                      children: <Widget>[
+                        Text(
+                            widget.giftClass.getName(widget.giftList, index),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
+                        Text(
+                            widget.giftClass.getDescription(widget.giftList, index),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                fontStyle: FontStyle.italic
+                            )
+                        ),
+                      ],
                     ),
-                    Text(
-                      //"temp",
-                      widget.giftClass.getDescription(widget.giftList, index),
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontStyle: FontStyle.italic
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                              "\$${(widget.giftClass.getPrice(widget.giftList, index)).toString()}",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                  fontSize: 30.0,
+                                  fontWeight: FontWeight.bold
+                              )
+                          ),
+                        ],
                       )
                     )
                   ],
@@ -100,7 +120,29 @@ class _GiftListPage extends State<GiftListPage>
       ),
 
       appBar: AppBar(
-        title: Text("Gift List") //TODO this should later be the name of the list
+        title: Text("Gift List"), //TODO this should later be the name of the list
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.format_list_bulleted, size: 30.0),
+                onPressed: () => {
+                  print("bullet list called")
+                },
+              ),
+
+              IconButton(
+                icon: Icon(Icons.apps, size: 31.0),
+                onPressed: () => {
+                  print("tiles list called")
+                },
+              ),
+
+              SizedBox(width: 10.0)
+
+            ],
+          )
+        ]
       ),
 
       drawer: NavDrawer(),
@@ -109,7 +151,6 @@ class _GiftListPage extends State<GiftListPage>
         child: ListView.builder(
           itemCount: widget.giftClass.getLengthOfList(widget.giftList),
           itemBuilder: (BuildContext context, int index) => _buildGiftsList(index)
-            //TODO i think this should be rebuilt everytime the page is brought up
         )
       )
     );
