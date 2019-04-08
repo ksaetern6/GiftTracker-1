@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
 import 'loginPage.dart';
+import 'auth.dart';
 
 
 void main() => runApp(MyApp());
@@ -44,9 +45,11 @@ class HomePage extends StatelessWidget
       body: Center(
       child: RaisedButton(
         child: Text('Login'),
+
+        //auth: Auth() implements BaseAuth abstract class
         onPressed: () => {
           Navigator.push(context, MaterialPageRoute(
-              builder: (context) => LoginPage())
+              builder: (context) => LoginPage(auth: Auth(),))
             )
           },
         ),
