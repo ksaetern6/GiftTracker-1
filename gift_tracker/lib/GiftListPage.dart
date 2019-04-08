@@ -119,6 +119,8 @@ class _GiftListPage extends State<GiftListPage>
         }
       ),
 
+      //backgroundColor: Color.fromRGBO(227, 223, 236, 1.0), //TODO add a nice background color
+
       appBar: AppBar(
         title: Text("Gift List"), //TODO this should later be the name of the list
         actions: <Widget>[
@@ -132,7 +134,7 @@ class _GiftListPage extends State<GiftListPage>
               ),
 
               IconButton(
-                icon: Icon(Icons.apps, size: 31.0),
+                icon: Icon(Icons.apps, size: 29.0),
                 onPressed: () => {
                   print("tiles list called")
                 },

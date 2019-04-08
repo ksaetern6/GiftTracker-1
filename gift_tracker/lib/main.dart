@@ -39,6 +39,7 @@ class _HomePage extends State<HomePage>
     return Scaffold(
       appBar: AppBar(
         title: Text("GiftTracker"),
+        //backgroundColor: Color.fromRGBO(223, 75, 253, 1.0),
       ),
 
       drawer: NavDrawer(/*giftClass, giftList*/),
