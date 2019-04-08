@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
+import 'loginPage.dart';
+import 'auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,14 +22,10 @@ class MyApp extends StatelessWidget
   }
 }
 
-class HomePage extends StatefulWidget
+class HomePage extends StatelessWidget
 {
-  @override
-  _HomePage createState() => _HomePage();
-}
 
-class _HomePage extends State<HomePage>
-{
+  //AuthGoogle authService = AuthGoogle();
   @override
   Widget build(BuildContext context) {
     // forces portrait usage of this page/widget
@@ -44,16 +42,19 @@ class _HomePage extends State<HomePage>
       drawer: NavDrawer(/*giftClass, giftList*/),
 
       body: Center(
-        child: Column(
-          children: <Widget>[
-            RaisedButton(
-              child: Text("Sign Up"),
-              onPressed: () => print("sign up")//TODO sign up using google account,
-            ),
-          ],
-        )
-      )
+      child: RaisedButton(
+        child: Text('Login'),
 
+        //auth: Auth() implements BaseAuth abstract class
+        onPressed: () => {
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => LoginPage(auth: Auth(),))
+            )
+          },
+        ),
+      ),
     );
   }
-}
+
+} //_HomePage
+
