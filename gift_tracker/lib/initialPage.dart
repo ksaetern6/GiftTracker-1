@@ -31,12 +31,18 @@ class _initialPageState extends State<initialPage> {
     });
   }
 
+  /*
+  change state of switch statement (_authStatus) to SignedIn
+   */
   void _signedIn() {
     setState(() {
       _authStatus = AuthStatus.SignedIn;
     });
   }
 
+  /*
+  change state of switch statement (_authStatus) to notSignedIn
+   */
   void _signedOut() {
     setState(() {
       _authStatus = AuthStatus.notSignedIn;

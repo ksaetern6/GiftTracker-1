@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
+import 'HomePage.dart';
 
 class LoginPage extends StatefulWidget {
 
   //when creating login page, creates instance of BaseAuth abstract class
   LoginPage({this.auth, this.onSignedIn});
   final BaseAuth auth;
+  //function that takes no parameters and returns no parameters
   final VoidCallback onSignedIn;
 
   @override
@@ -45,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
      return [
        TextFormField(
          decoration: InputDecoration(labelText: 'Email'),
+         keyboardType: TextInputType.emailAddress,
          validator: (value) => value.isEmpty ? 'Email cannot be empty'
              : null,
          onSaved: (value) => _email = value,
@@ -115,6 +118,12 @@ class _LoginPageState extends State<LoginPage> {
                _password
            );
            print('Signed In: ${userId}');
+//           Navigator.push(context, MaterialPageRoute(
+//              builder: (context) => HomePage(
+//                auth: Auth(),
+//                onSignedOut: AuthStatus,
+//              ))
+//            );
          } //if login
          else {
            String userId = await widget.auth.registerEmailAndPass(
@@ -123,6 +132,9 @@ class _LoginPageState extends State<LoginPage> {
            );
            print('Registered user: ${userId}');
          }//else register
+
+         //Sign user into HomePage
+         widget.onSignedIn();
        }
        catch (error) {
          print('Error: $error');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
-
+import 'NavDrawer.dart';
 class HomePage extends StatelessWidget {
   HomePage({this.auth, this.onSignedOut});
 
@@ -19,7 +19,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text("Home Page"),
@@ -35,11 +34,14 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+
+      drawer: NavDrawer(),
+      
       body: Container(
         child: Center(
           child: Text("Welcome", style: TextStyle(fontSize: 30.0),),
         ),
       ),
-    )
+    );
   }
 }
