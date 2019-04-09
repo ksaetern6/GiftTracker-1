@@ -4,8 +4,9 @@ import 'auth.dart';
 class LoginPage extends StatefulWidget {
 
   //when creating login page, creates instance of BaseAuth abstract class
-  LoginPage({this.auth});
+  LoginPage({this.auth, this.onSignedIn});
   final BaseAuth auth;
+  final VoidCallback onSignedIn;
 
   @override
   _LoginPageState createState() => _LoginPageState();
