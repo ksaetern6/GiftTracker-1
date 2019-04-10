@@ -36,63 +36,62 @@ class _GiftListPage extends State<GiftListPage>
           )
       );
     else
-      return new GestureDetector(
-        onTap: ()
-         {
-           // TODO when the gift is tapped the giftee should be able to update the gift parameters
+      return new Card(
+        color: Colors.yellow,
+        elevation: 3,
+        margin: EdgeInsets.all(8),
+        child: GestureDetector(
+          onTap: ()
+          {
+            // TODO when the gift is tapped the giftee should be able to update the gift parameters
 
-           // TODO later on, ONLY the giftee should be able to tap the gift
-           // TODO  and make updates it
-           print("gift tapped");
-         },
-        child: Container(
-          padding: EdgeInsets.only(left: 10.0, top: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Text(
-                            widget.giftClass.getName(widget.giftList, index),
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 30.0,
-                                fontWeight: FontWeight.bold
-                            )
-                        ),
-                        Text(
-                            widget.giftClass.getDescription(widget.giftList, index),
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                fontStyle: FontStyle.italic
-                            )
-                        ),
-                      ],
-                    ),
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+            // TODO later on, ONLY the giftee should be able to tap the gift
+            // TODO  and make updates it
+            print("gift tapped");
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 10.0, top: 10.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Column(
                         children: <Widget>[
                           Text(
-                              "\$${(widget.giftClass.getPrice(widget.giftList, index)).toString()}",
-                              textAlign: TextAlign.right,
+                              widget.giftClass.getName(widget.giftList, index),
+                              textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontSize: 30.0,
                                   fontWeight: FontWeight.bold
                               )
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Text(
+                                  "\$${(widget.giftClass.getPrice(widget.giftList, index)).toString()}",
+                                  style: TextStyle(
+                                      fontSize: 30.0,
+                                      fontStyle: FontStyle.italic
+                                  )
+                              ),
+                              Text(
+                                  widget.giftClass.getPriority(widget.giftList, index).toString(),
+                                  style: TextStyle(
+                                      fontSize: 30.0,
+                                      fontStyle: FontStyle.italic
+                                  )
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    )
-                  ],
+                      ),
+                    ],
+                  )
                 )
-              )
-            ],
+              ],
+            )
           )
         )
       );
