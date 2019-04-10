@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'NavDrawer.dart';
+//import 'package:flutter/services.dart';
+//import 'NavDrawer.dart';
+//import 'loginPage.dart';
+import 'auth.dart';
+import 'initialPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,46 +18,45 @@ class MyApp extends StatelessWidget
           primarySwatch: Colors.yellow,
         ),
 
-        home: HomePage()
+        home: initialPage(auth: Auth(),)
     );
   }
 }
 
-class HomePage extends StatefulWidget
-{
-  @override
-  _HomePage createState() => _HomePage();
-}
+//class HomePage extends StatelessWidget
+//{
+//
+//  //AuthGoogle authService = AuthGoogle();
+//  @override
+//  Widget build(BuildContext context) {
+//    // forces portrait usage of this page/widget
+//    SystemChrome.setPreferredOrientations([
+//      DeviceOrientation.portraitUp,
+//      DeviceOrientation.portraitDown,
+//    ]);
+//
+//    return Scaffold(
+//      appBar: AppBar(
+//        title: Text("GiftTracker"),
+//        //backgroundColor: Color.fromRGBO(223, 75, 253, 1.0),
+//      ),
+//
+//      drawer: NavDrawer(/*giftClass, giftList*/),
+//
+//      body: Center(
+//      child: RaisedButton(
+//        child: Text('Login'),
+//
+//        //auth: Auth() implements BaseAuth abstract class
+//        onPressed: () => {
+//          Navigator.push(context, MaterialPageRoute(
+//              builder: (context) => LoginPage(auth: Auth(),))
+//            )
+//          },
+//        ),
+//      ),
+//    );
+//  }
+//
+//} //_HomePage
 
-class _HomePage extends State<HomePage>
-{
-  @override
-  Widget build(BuildContext context) {
-    // forces portrait usage of this page/widget
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("GiftTracker"),
-        //backgroundColor: Color.fromRGBO(223, 75, 253, 1.0),
-      ),
-
-      drawer: NavDrawer(/*giftClass, giftList*/),
-
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            RaisedButton(
-              child: Text("Sign Up"),
-              onPressed: () => print("sign up")//TODO sign up using google account,
-            ),
-          ],
-        )
-      )
-
-    );
-  }
-}
