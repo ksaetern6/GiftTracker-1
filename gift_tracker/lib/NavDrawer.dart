@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'GiftListPage.dart';
 import 'GiftList.dart';
 import 'Gift.dart';
-import 'main.dart';
+import 'HomePage.dart';
 
 class NavDrawer extends StatelessWidget
 {
@@ -25,17 +25,17 @@ class NavDrawer extends StatelessWidget
               ),
             ),
 
-//            ListTile(
-//              title: Text(
-//                "Home Page",
-//                style: TextStyle(fontSize: 20.0)
-//              ),
-//              onTap: () {
-//                Navigator.pop(context);
-//                Navigator.push(context, MaterialPageRoute(
-//                    builder: (context) => new HomePage()));
-//              },
-//            ),
+            ListTile(
+              title: Text(
+                "Home Page",
+                style: TextStyle(fontSize: 20.0)
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) =>  HomePage()));
+              },
+            ),
 
             ListTile(
               title: Text(

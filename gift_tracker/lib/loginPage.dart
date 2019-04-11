@@ -107,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
   }//validate
 
   void submit() async {
+     //if forms aren't empty
      if (validate()) {
        //trim excess in email
        _email = _email.toString().trim();
@@ -118,12 +119,6 @@ class _LoginPageState extends State<LoginPage> {
                _password
            );
            print('Signed In: ${userId}');
-//           Navigator.push(context, MaterialPageRoute(
-//              builder: (context) => HomePage(
-//                auth: Auth(),
-//                onSignedOut: AuthStatus,
-//              ))
-//            );
          } //if login
          else {
            String userId = await widget.auth.registerEmailAndPass(
