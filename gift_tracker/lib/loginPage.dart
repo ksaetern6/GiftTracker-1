@@ -46,14 +46,25 @@ class _LoginPageState extends State<LoginPage> {
   List<Widget> buildInputs() {
      return [
        TextFormField(
-         decoration: InputDecoration(labelText: 'Email'),
+         maxLines: 1,
+         decoration: InputDecoration(
+             labelText: 'Email',
+             icon: Icon(
+               Icons.mail,
+             ),
+         ),
          keyboardType: TextInputType.emailAddress,
          validator: (value) => value.isEmpty ? 'Email cannot be empty'
              : null,
          onSaved: (value) => _email = value,
        ),
        TextFormField(
-         decoration: InputDecoration(labelText: 'Password'),
+         decoration: InputDecoration(
+             labelText: 'Password',
+             icon: Icon(
+               Icons.lock
+             ),
+         ),
          obscureText: true,
          validator: (value) => value.isEmpty ? 'Password cannot be empty'
              : null,
@@ -63,34 +74,39 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<Widget> buildButtons() {
-     if (_formType == FormType.login) {
-       return [
-         RaisedButton(
-           child: Text('Login', style: TextStyle(fontSize: 20.0)),
-           onPressed: submit,
-         ),
+     return [
+       Padding(
+         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+         child: SizedBox(
+          height: 40.0,
+          child: RaisedButton(
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)),
+            color: _formType == FormType.login
+            ? Colors.yellow
+            : Colors.yellowAccent,
+            child: _formType == FormType.login
+                ? Text('Login', style: TextStyle(fontSize: 20.0))
+                : Text('Create Account', style: TextStyle(fontSize: 20.0)),
+            onPressed: submit,
+          ),
+        ),
+       ),
          FlatButton(
-           child: Text('Create Account', style: TextStyle(fontSize: 20.0),),
-           onPressed: register,
+           child: _formType == FormType.login
+           ? Text('Create Account',
+               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300))
+           : Text('Already have an account? Sign In',
+               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300)),
+           onPressed: _formType == FormType.login
+           ? register
+           : login,
 
          )
-       ];
-     } //if login
-     else {
-       return [
-         RaisedButton(
-           child: Text('Create Account', style: TextStyle(fontSize: 20.0)),
-           onPressed: submit,
-         ),
-         FlatButton(
-           child: Text('Have Account? Login', style: TextStyle(fontSize: 20.0),),
-           onPressed: login,
+     ];
+   }
 
-         )
-       ];
-     } //else register
-  }
-  //originally void
   bool validate() {
     //formKey allows us to call validator on TextFormFields
     final form = formKey.currentState;
