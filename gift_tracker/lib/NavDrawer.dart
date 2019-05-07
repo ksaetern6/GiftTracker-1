@@ -4,6 +4,7 @@ import 'GiftListPage.dart';
 import 'GiftList.dart';
 import 'Gift.dart';
 import 'HomePage.dart';
+import 'auth.dart';
 
 class NavDrawer extends StatelessWidget
 {
@@ -55,8 +56,8 @@ class NavDrawer extends StatelessWidget
 
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => new GiftListPage(
-                        giftClass: giftClass, giftList: giftList
+                    builder: (context) => GiftListPage(
+                        giftClass: giftClass, giftList: giftList, auth: Auth(),
                     )));
               },
             ),
