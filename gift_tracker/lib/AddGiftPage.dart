@@ -2,23 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'GiftList.dart';
 import 'Gift.dart';
+import 'auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddGiftPage extends StatefulWidget
 {
   final GiftList giftClass;
   final List<Gift> giftList;
 
-  AddGiftPage({Key key, this.giftClass, this.giftList}) : super(key: key);
+  final BaseAuth auth;
+
+  AddGiftPage({Key key, this.giftClass, this.giftList, this.auth}) : super(key: key);
 
   @override
   _AddGiftPage createState() => _AddGiftPage();
 }
 
+final Firestore firebaseDB = Firestore.instance;
+
 class _AddGiftPage extends State<AddGiftPage>
 {
+  String userID = "";
+
+  void initState() {
+    super.initState();
+    widget.auth.getCurrentUser().then((user) {
+
+      setState(() {
+        userID = user.uid;
+
+      });
+      if(userID == "")
+        print("ERROR: USERID IS NULL");
+    });
+  }
+
   // -- Variables -- //
 
-  //TODO Is there a better way to do this? So many controllers is annoying
   final giftNameController = new TextEditingController();
   final giftDescriptionController = new TextEditingController();
   final giftLinkController = new TextEditingController();
@@ -33,24 +54,44 @@ class _AddGiftPage extends State<AddGiftPage>
   final FocusNode giftPriorityFocus = FocusNode();
   final FocusNode giftPriceFocus = FocusNode();
 
-  //var tempList = new GiftList();
-
   // -- Functions -- //
 
   addGift()
   {
-    widget.giftClass.addGiftToList(widget.giftList,
-                                   giftNameController.text,
-                                   giftDescriptionController.text,
-                                   int.parse(giftPriorityController.text),
-                                   double.parse(giftPriceController.text),
-                                   giftLinkController.text,
-                                   giftDateAddedController.text,
-                                   false);
+    Gift newGift = new Gift();
 
-    widget.giftClass.printList(widget.giftList); // for checking
+    newGift.giftName = giftNameController.text;
+    newGift.giftDescription = giftDescriptionController.text;
+    newGift.giftLink = giftLinkController.text;
+    newGift.giftDateAdded = giftDateAddedController.text;
+    newGift.giftPriority = int.parse(giftPriorityController.text);
+    newGift.giftPrice = double.parse(giftPriceController.text);
+
+    //FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    //String userID = user.uid;
+
+    // yeah, this is dumb but it works
+    var doc = firebaseDB.collection(userID).document("gifts").collection("gifts").document();
+
+    firebaseDB.runTransaction((transaction) async {
+      await transaction.set(
+          doc, newGift.toMap());
+    });
 
     Navigator.pop(context);
+
+//    widget.giftClass.addGiftToList(widget.giftList,
+//                                   giftNameController.text,
+//                                   giftDescriptionController.text,
+//                                   int.parse(giftPriorityController.text),
+//                                   double.parse(giftPriceController.text),
+//                                   giftLinkController.text,
+//                                   giftDateAddedController.text,
+//                                   false);
+//
+//    widget.giftClass.printList(widget.giftList); // for checking
+//
+//    Navigator.pop(context);
   }
 
   // -- Main Widget Builder --//

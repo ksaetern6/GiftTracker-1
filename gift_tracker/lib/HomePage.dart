@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text("Create List", style: TextStyle(fontSize: 20.0),)
+                                Text("My List", style: TextStyle(fontSize: 20.0),)
                               ],
                             ))))),
             ),
@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text("Open List", style: TextStyle(fontSize: 20.0),)
+                                  Text("Join List", style: TextStyle(fontSize: 20.0),)
                                 ],
                               ))))),
             )
@@ -82,7 +82,11 @@ class HomePage extends StatelessWidget {
     );
   }//build context
 
-  void _NavtoGiftListPage(context) {
+  void _NavtoGiftListPage(context)
+  {
+    // TODO create the entry in firebase here for the user
+
+
     GiftList giftClass = GiftList();
     List<Gift> giftList = List<Gift>();
 
@@ -90,7 +94,7 @@ class HomePage extends StatelessWidget {
 
     Navigator.push(context, MaterialPageRoute(builder:
         (context) => GiftListPage(
-          giftClass: giftClass, giftList: giftList,
+          giftClass: giftClass, giftList: giftList, auth: Auth(),
         )));
   }
 }

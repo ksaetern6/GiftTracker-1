@@ -11,44 +11,81 @@ class Gift
   bool _giftBought = false;  // if true, gift was bought by someone
   //TODO add image variable
 
-  // -- Functions -- //
+  Gift.set(this._giftName, this._giftDescription, this._giftPriority,
+            this._giftPrice, this._giftDateAdded, this._giftLink, this._giftBought);
 
-  Gift(this._giftName, this._giftDescription, this._giftPriority, this._giftPrice,
-       this._giftDateAdded, this._giftLink, this._giftBought);
+  Gift();
 
-  String getName()
-  {
-    return _giftName;
+  // -- Getters --
+  String get giftName => _giftName;
+
+  String get giftDescription => _giftDescription;
+
+  int get giftPriority => _giftPriority;
+
+  double get giftPrice => _giftPrice;
+
+  String get giftDateAdded => _giftDateAdded;
+
+  String get giftLink => _giftLink;
+
+  bool get giftBought => _giftBought;
+
+  // -- Setters --
+
+  set giftName(name){
+    this._giftName = name;
   }
 
-  String getDescription()
-  {
-    return _giftDescription;
+  set giftDescription(desc){
+    this._giftDescription = desc;
   }
 
-  String getLink()
-  {
-    return _giftLink;
+  set giftPriority(prio){
+    this._giftPriority = prio;
   }
 
-  String getDateAdded()
-  {
-    return _giftDateAdded;
+  set giftPrice(price){
+    this._giftPrice = price;
   }
 
-  int getPriority()
-  {
-    return _giftPriority;
+  set giftDateAdded(date){
+    this._giftDateAdded = date;
   }
 
-  double getPrice()
-  {
-    return _giftPrice;
+  set giftLink(link){
+    this._giftLink = link;
   }
 
-  bool getBought()
-  {
-    return _giftBought;
+  set giftBought(bought){
+    this._giftBought = bought;
   }
+
+  Gift.fromMapObject(Map<String, dynamic> myMap) {
+    this._giftName = myMap['name'];
+    this._giftDescription = myMap['description'];
+    this._giftPriority = myMap['priority'];
+    this._giftPrice = myMap['price'];
+    this._giftDateAdded = myMap['dateAdded'];
+    this._giftLink = myMap['link'];
+    this._giftBought = myMap['bought'];
+  }
+
+  Map<String, dynamic> toMap() {
+
+    //empty map object
+    var myMap = Map<String, dynamic>();
+
+    myMap['name'] = _giftName;
+    myMap['description'] = _giftDescription;
+    myMap['priority'] = _giftPriority;
+    myMap['price'] = _giftPrice;
+    myMap['dateAdded'] = _giftDateAdded;
+    myMap['link'] = _giftLink;
+    myMap['bought'] = _giftBought;
+
+    return myMap;
+  }// toMap()
 
 }
+

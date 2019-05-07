@@ -4,13 +4,16 @@ import 'NavDrawer.dart';
 import 'AddGiftPage.dart';
 import 'GiftList.dart';
 import 'Gift.dart';
+import 'auth.dart';
 
 class GiftListPage extends StatefulWidget
 {
   final GiftList giftClass;
   final List<Gift> giftList;
 
-  GiftListPage({Key key, this.giftClass, this.giftList}) : super(key: key);
+  final BaseAuth auth;
+
+  GiftListPage({Key key, this.giftClass, this.giftList, this.auth}) : super(key: key);
 
   @override
   _GiftListPage createState() => _GiftListPage();
@@ -18,24 +21,33 @@ class GiftListPage extends StatefulWidget
 
 class _GiftListPage extends State<GiftListPage>
 {
-  // -- Variables -- //
-  //var gifts = new GiftList();
+  String userID = "";
 
+  void initState() {
+    super.initState();
+    widget.auth.getCurrentUser().then((user) {
 
-  // -- Functions -- //
+      setState(() {
+        userID = user.uid;
+
+      });
+      if(userID == "")
+        print("ERROR: USERID IS NULL");
+    });
+  }
 
   _buildGiftsList(index)
   {
-    if(widget.giftClass.isListEmpty(widget.giftList))
-      return new Center( //TODO make this something better looking
-          child: Text("Your list is empty! \n"
-                      "Add some gifts and they will be displayed here!",
-                 style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold)
-          )
-      );
-    else
+//    if(widget.giftClass.isListEmpty(widget.giftList))
+//      return new Center( //TODO make this something better looking
+//          child: Text("Your list is empty! \n"
+//                      "Add some gifts and they will be displayed here!",
+//                 style: TextStyle(
+//                    fontSize: 30.0,
+//                    fontWeight: FontWeight.bold)
+//          )
+//      );
+//    else
       return new GestureDetector(
           onTap: ()
           {
@@ -61,7 +73,8 @@ class _GiftListPage extends State<GiftListPage>
                               Row(
                                 children: <Widget>[
                                   Text(
-                                      widget.giftClass.getName(widget.giftList, index),
+                                      //widget.giftClass.getName(widget.giftList, index),
+                                    "temp",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           fontSize: 30.0,
@@ -73,7 +86,8 @@ class _GiftListPage extends State<GiftListPage>
                               Row(
                                 children: <Widget>[
                                   Text(
-                                      "\$${(widget.giftClass.getPrice(widget.giftList, index)).toString()}",
+                                      //"\$${(widget.giftClass.getPrice(widget.giftList, index)).toString()}",
+                                    "temp",
                                       style: TextStyle(
                                           fontSize: 30.0,
                                           fontStyle: FontStyle.italic
@@ -81,7 +95,8 @@ class _GiftListPage extends State<GiftListPage>
                                   ),
 
                                   Text(
-                                      widget.giftClass.getPriority(widget.giftList, index).toString(),
+                                      //widget.giftClass.getPriority(widget.giftList, index).toString(),
+                                    "temp",
                                       style: TextStyle(
                                           fontSize: 30.0,
                                           fontStyle: FontStyle.italic
@@ -117,7 +132,7 @@ class _GiftListPage extends State<GiftListPage>
         onPressed: () => {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) => new AddGiftPage(
-                giftClass: widget.giftClass, giftList: widget.giftList
+                giftClass: widget.giftClass, giftList: widget.giftList, auth: widget.auth
             )))
         }
       ),
@@ -153,10 +168,10 @@ class _GiftListPage extends State<GiftListPage>
       drawer: NavDrawer(),
 
       body: Container(
-        child: ListView.builder(
-          itemCount: widget.giftClass.getLengthOfList(widget.giftList),
-          itemBuilder: (BuildContext context, int index) => _buildGiftsList(index)
-        )
+//        child: ListView.builder(
+//          itemCount: widget.giftClass.getLengthOfList(widget.giftList),
+//          itemBuilder: (BuildContext context, int index) => _buildGiftsList(index)
+//        )
       )
     );
   }
