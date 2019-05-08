@@ -3,6 +3,7 @@ import 'auth.dart';
 import 'NavDrawer.dart';
 import 'GiftListPage.dart';
 import 'package:flutter/services.dart';
+import 'joinListPage.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({this.auth, this.onSignedOut});
@@ -94,7 +95,7 @@ class HomePage extends StatelessWidget {
                       height: 60,
                       width: 60,
                     ),
-                    onTap: () => print("shits broke yo"),
+                    onTap: () => _NavtoJoinListPage(context),
                   )
                 ],
               )
@@ -119,48 +120,6 @@ class HomePage extends StatelessWidget {
                   )))
         ],
       ),
-//      body: Container(
-//        //child: Text("Welcome", style: TextStyle(fontSize: 30.0),),
-//        child: Row(
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            Expanded(
-//              child: Container(
-//                padding: EdgeInsets.all(3.0),
-//                  child: SizedBox(
-//                    height: 150,
-//                    child: GestureDetector(
-//                        onTap: () => _NavtoGiftListPage(context),
-//                        child: Card(
-//                            elevation: 3.0,
-//                            child: Column(
-//                              crossAxisAlignment: CrossAxisAlignment.center,
-//                              mainAxisAlignment: MainAxisAlignment.center,
-//                              children: <Widget>[
-//                                Text("My List", style: TextStyle(fontSize: 20.0),)
-//                              ],
-//                            ))))),
-//            ),
-//            Expanded(
-//              child: Container(
-//                  padding: EdgeInsets.all(3.0),
-//                  child: SizedBox(
-//                      height: 150,
-//                      child: GestureDetector(
-//                          onTap: () => print('Open List Tapped!'),
-//                          child: Card(
-//                              elevation: 3.0,
-//                              child: Column(
-//                                crossAxisAlignment: CrossAxisAlignment.center,
-//                                mainAxisAlignment: MainAxisAlignment.center,
-//                                children: <Widget>[
-//                                  Text("Join List", style: TextStyle(fontSize: 20.0),)
-//                                ],
-//                              ))))),
-//            )
-//          ],
-//        ),
-//      ),
     );
   } //build context
 
@@ -168,7 +127,10 @@ class HomePage extends StatelessWidget {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => GiftListPage(auth: Auth())));
   }
-
+  void _NavtoJoinListPage(context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => joinListPage()));
+  }
   void getUser(key) async {
     var user = await auth.getCurrentUser();
     var userID = user.uid;

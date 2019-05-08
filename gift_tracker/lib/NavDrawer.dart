@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'GiftListPage.dart';
 import 'HomePage.dart';
 import 'auth.dart';
+import 'joinListPage.dart';
 
 class NavDrawer extends StatelessWidget
 {
@@ -48,6 +49,19 @@ class NavDrawer extends StatelessWidget
                     builder: (context) => GiftListPage(
                          auth: auth,
                     )));
+
+              },
+            ),
+
+            ListTile(
+              title: Text(
+                "Join List",
+                style: TextStyle(fontSize: 20.0),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => joinListPage()));
 
               },
             ),
