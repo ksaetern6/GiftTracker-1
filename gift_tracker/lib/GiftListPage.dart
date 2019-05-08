@@ -6,7 +6,6 @@ import 'AddGiftPage.dart';
 import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'models/Gift.dart';
-import 'package:intl/intl.dart';
 
 enum sortFilter {
   grid,
