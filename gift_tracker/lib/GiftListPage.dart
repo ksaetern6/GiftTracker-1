@@ -103,7 +103,9 @@ class _GiftListPage extends State<GiftListPage> {
   buildCards(int index) {
     return Card(
       elevation: 2.0,
-      color: Colors.deepPurple[50],
+      color: giftList[index].giftBought == false
+          ? Colors.deepPurple[50]
+          : Colors.grey,
       margin: EdgeInsets.fromLTRB(13, 5, 13, 5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
 
@@ -138,7 +140,9 @@ class _GiftListPage extends State<GiftListPage> {
   buildCardsGrid(index) {
      return Card(
       elevation: 2.0,
-      color: Colors.deepPurple[50],
+      color: giftList[index].giftBought == false
+          ? Colors.deepPurple[50]
+          : Colors.grey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -176,36 +180,6 @@ class _GiftListPage extends State<GiftListPage> {
       );
 
 
-//    return Card(
-//        elevation: 2.0,
-//        color: Colors.deepPurple[50],
-//        child: Column(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              Container(
-//                  padding: EdgeInsets.only(bottom: 30.0),
-//                  child: Text(
-//                    giftList[index].giftName,
-//                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-//                  ),
-//                  ),
-//              Container(
-//                //padding: EdgeInsets.only(top: 30.0),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                  children: <Widget>[
-//                    Text(
-//                      "\$${(giftList[index].giftPrice).round()}",
-//                      style: TextStyle(fontSize: 15.0),
-//                    ),
-//                    Text(
-//                      "${(giftList[index].giftPriority).round()}",
-//                      style: TextStyle(fontSize: 15.0),
-//                    ),
-//                  ],
-//                )
-//              )
-//            ]));
   }
 
   buildGrid() {
