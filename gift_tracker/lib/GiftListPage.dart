@@ -86,7 +86,6 @@ class _GiftListPage extends State<GiftListPage>
       )).toList();
 
     }//else
-    print(giftList);
   }
 
   buildCards(int index){
@@ -103,12 +102,12 @@ class _GiftListPage extends State<GiftListPage>
           child: Text("${(giftList[index].giftPriority).round()}"),
           onTap: () => print("priority tapped"),
         ),
-        onTap: () => showUpdateDialog(giftList[index]),
+        onTap: () => showUpdateDialog(giftList[index], index),
       ),
     );
   }
 
-  updateGift(giftList)
+  updateGift(giftList, index) async
   {
     Gift newGift = new Gift();
 
@@ -129,18 +128,30 @@ class _GiftListPage extends State<GiftListPage>
     giftPriorityController.text.isEmpty ?
     newGift.giftPriority = giftList.giftPriority : newGift.giftPriority= double.parse(giftPriorityController.text);
 
+    var foundDocID;
+    var doc;
+    firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots().listen((snapshot)
+    {
+      foundDocID = snapshot.documents.elementAt(index).documentID.toString();
 
-    var docs = firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots();
+      doc = firebaseDB.collection(userID).document("gifts").collection("gifts").document(foundDocID);
+    });
 
-//    firebaseDB.runTransaction((transaction) async {
-//      await transaction.update(
-//          foundDoc, newGift.toMap());
-//    });
+    firebaseDB.runTransaction((transaction) async {
+      await transaction.update(
+          doc, newGift.toMap());
+    });
+
+    giftLinkController.clear();
+    giftPriorityController.clear();
+    giftNameController.clear();
+    giftPriceController.clear();
+    giftDescriptionController.clear();
 
     Navigator.pop(context);
   }
 
-  showUpdateDialog(giftList)
+  showUpdateDialog(giftList, index)
   {
     showDialog(
       context: context,
@@ -286,7 +297,7 @@ class _GiftListPage extends State<GiftListPage>
                     "Update gift",
                     style: TextStyle(color: Colors.black)
                   ),
-                  onPressed: () => updateGift(giftList)
+                  onPressed: () => updateGift(giftList, index)
                 ),
                 SizedBox(width: 10),
 
