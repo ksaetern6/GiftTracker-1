@@ -103,14 +103,31 @@ class _GiftListPage extends State<GiftListPage> {
 
     return Card(
       elevation: 2.0,
+      color: Colors.deepPurple[50],
+      margin: EdgeInsets.fromLTRB(13, 5, 13, 5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+
       child: ListTile(
-        leading: GestureDetector(
-          child: Text("\$ ${giftList[index].giftPrice}"),
-          onTap: () => print('price tapped'),
+        contentPadding: EdgeInsets.only(left: 10.0, top: 10.0, right: 20.0, bottom: 10.0),
+        title: Text(
+          giftList[index].giftName,
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
         ),
-        title: Text(giftList[index].giftName),
         trailing: GestureDetector(
-          child: Text("${(giftList[index].giftPriority).round()}"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                  "\$ ${(giftList[index].giftPrice).round()}",
+                  style: TextStyle(fontSize: 20)
+              ),
+              SizedBox(height: 10),
+              Text(
+                  "${(giftList[index].giftPriority).round()}",
+                  style: TextStyle(fontSize: 20)
+              ),
+            ],
+          ),//Text("Priority: ${(giftList[index].giftPriority).round()}", style: TextStyle(fontSize: 20),),
           onTap: () => print("priority tapped"),
         ),
         onTap: () => showUpdateDialog(giftList[index], index),
@@ -121,6 +138,7 @@ class _GiftListPage extends State<GiftListPage> {
   buildCardsGrid(index) {
     return Card(
         elevation: 2.0,
+        color: Colors.deepPurple[50],
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -128,7 +146,7 @@ class _GiftListPage extends State<GiftListPage> {
                   padding: EdgeInsets.only(bottom: 30.0),
                   child: Text(
                     giftList[index].giftName,
-                    style: TextStyle(fontSize: 20.0),
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                   ),
               Container(
@@ -137,11 +155,11 @@ class _GiftListPage extends State<GiftListPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
-                      "\$${giftList[index].giftPrice}",
+                      "\$${(giftList[index].giftPrice).round()}",
                       style: TextStyle(fontSize: 15.0),
                     ),
                     Text(
-                      "${giftList[index].giftPriority}",
+                      "${(giftList[index].giftPriority).round()}",
                       style: TextStyle(fontSize: 15.0),
                     ),
                   ],
