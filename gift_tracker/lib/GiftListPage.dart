@@ -12,6 +12,7 @@ enum sortFilter {
   tile,
 }
 
+
 class GiftListPage extends StatefulWidget
 {
   final BaseAuth auth;
@@ -22,10 +23,10 @@ class GiftListPage extends StatefulWidget
   _GiftListPage createState() => _GiftListPage();
 }
 
-class _GiftListPage extends State<GiftListPage>
-{
+class _GiftListPage extends State<GiftListPage> {
   String userID = "";
   List<Gift> giftList = List<Gift>();
+  sortFilter filter = sortFilter.tile;
   final Firestore firebaseDB = Firestore.instance;
 
   // controllers and focus nodes
@@ -47,58 +48,85 @@ class _GiftListPage extends State<GiftListPage>
   void initState() {
     super.initState();
     widget.auth.getCurrentUser().then((user) {
-
       setState(() {
         userID = user.uid;
-
       });
-      if(userID == "")
-        print("ERROR: USERID IS NULL");
+      if (userID == "") print("ERROR: USERID IS NULL");
     });
   }
 
+
   buildStream(){
     return StreamBuilder(
-      stream: firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots(),
-      builder: (context, snapshot) {
-        getGifts(snapshot);
-        return ListView.builder(
-          itemCount: giftList.length,
-          itemBuilder: (context, index){
-            return buildCards(index);
-          },
-        );
-      }
-    );
+        stream: firebaseDB
+            .collection(userID)
+            .document("gifts")
+            .collection("gifts")
+            .snapshots(),
+        builder: (context, snapshot) {
+          getGifts(snapshot);
+          if (filter == sortFilter.tile) {
+            print("building tiles");
+            return ListView.builder(
+              itemCount: giftList.length,
+              itemBuilder: (context, index) {
+                return buildCards(index);
+              },
+            );
+          } else {
+            print("building Grid");
+            return buildGrid();
+          }
+        });
   }
 
-  getGifts(AsyncSnapshot<QuerySnapshot> snap){
-    if(snap.data == null) {
+  getGifts(AsyncSnapshot<QuerySnapshot> snap) {
+    if (snap.data == null) {
       return;
-    }
-    else{
-
+    } else {
       Gift gift = Gift();
-      giftList = snap.data.documents.map((doc) => (gift = Gift.set(
-        doc['name'],doc['description'],doc['priority'],doc['price'],
-        doc['dateAdded'],doc['link'],doc['bought'])
-      )).toList();
-
-    }//else
+      giftList = snap.data.documents
+          .map((doc) => (gift = Gift.set(
+              doc['name'],
+              doc['description'],
+              doc['priority'],
+              doc['price'],
+              doc['dateAdded'],
+              doc['link'],
+              doc['bought'])))
+          .toList();
+    } //else
+    print(giftList);
   }
+  buildCards(int index) {
 
-  buildCards(int index){
     return Card(
       elevation: 2.0,
-      child: ListTile(
-        leading: GestureDetector(
-          child: Text("\$ ${giftList[index].giftPrice}"),
-              onTap: () => print('price tapped'),
-        ),
-        title: Text(giftList[index].giftName),
+      color: Colors.deepPurple[50],
+      margin: EdgeInsets.fromLTRB(13, 5, 13, 5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
 
+      child: ListTile(
+        contentPadding: EdgeInsets.only(left: 10.0, top: 10.0, right: 20.0, bottom: 10.0),
+        title: Text(
+          giftList[index].giftName,
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
+        ),
         trailing: GestureDetector(
-          child: Text("${(giftList[index].giftPriority).round()}"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                  "\$ ${(giftList[index].giftPrice).round()}",
+                  style: TextStyle(fontSize: 20)
+              ),
+              SizedBox(height: 10),
+              Text(
+                  "${(giftList[index].giftPriority).round()}",
+                  style: TextStyle(fontSize: 20)
+              ),
+            ],
+          ),//Text("Priority: ${(giftList[index].giftPriority).round()}", style: TextStyle(fontSize: 20),),
           onTap: () => print("priority tapped"),
         ),
         onTap: () => showUpdateDialog(giftList[index], index),
@@ -106,6 +134,49 @@ class _GiftListPage extends State<GiftListPage>
     );
   }
 
+  buildCardsGrid(index) {
+    return Card(
+        elevation: 2.0,
+        color: Colors.deepPurple[50],
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.only(bottom: 30.0),
+                  child: Text(
+                    giftList[index].giftName,
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  ),
+              Container(
+                //padding: EdgeInsets.only(top: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      "\$${(giftList[index].giftPrice).round()}",
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    Text(
+                      "${(giftList[index].giftPriority).round()}",
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                  ],
+                )
+              )
+            ]));
+  }
+
+  buildGrid() {
+    return GridView.builder(
+      itemCount: giftList.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      itemBuilder: (context, index) {
+        return buildCardsGrid(index);
+      },
+    );
+  }
   updateGift(giftList, index) async
   {
     Gift newGift = new Gift();
@@ -136,11 +207,16 @@ class _GiftListPage extends State<GiftListPage>
       doc = firebaseDB.collection(userID).document("gifts").collection("gifts").document(foundDocID);
 
     });
-
-    firebaseDB.runTransaction((transaction) async {
-      await transaction.update(
-          doc, newGift.toMap());
-    });
+    try {
+      firebaseDB.runTransaction((transaction) async {
+        await transaction.update(
+            doc, newGift.toMap());
+      });
+    }
+    catch(e){
+      print("error here");
+      print(e);
+  }
 
     giftLinkController.clear();
     giftPriorityController.clear();
@@ -351,48 +427,43 @@ class _GiftListPage extends State<GiftListPage>
     ]);
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) => new AddGiftPage(auth: widget.auth)))
-        }
-      ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new AddGiftPage(
+                              auth: widget.auth)))
+                }),
 
-      //backgroundColor: Color.fromRGBO(227, 223, 236, 1.0), //TODO add a nice background color
+        //backgroundColor: Color.fromRGBO(227, 223, 236, 1.0), //TODO add a nice background color
 
-      appBar: AppBar(
-        title: Text("Gift List"), //TODO this should later be the name of the list
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.format_list_bulleted, size: 30.0),
-                onPressed: () => {
-                  print("bullet list called")
-                },
-              ),
-
-              IconButton(
-                icon: Icon(Icons.apps, size: 29.0),
-                onPressed: () => {
-                  print("tiles list called")
-                },
-              ),
-
-              SizedBox(width: 10.0)
-
-            ],
-          )
-        ]
-      ),
-
-      drawer: NavDrawer(),
-
-      body: Container(
-        child: buildStream(),
-      )
-    );
+        appBar: AppBar(
+            title: Text(
+                "Gift List"), //TODO this should later be the name of the list
+            actions: <Widget>[
+              Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.format_list_bulleted, size: 30.0),
+                    onPressed: () => setState(() {
+                          filter = sortFilter.tile;
+                        }),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.apps, size: 29.0),
+                    onPressed: () => setState(() {
+                          filter = sortFilter.grid;
+                        }),
+                  ),
+                  SizedBox(width: 10.0)
+                ],
+              )
+            ]),
+        drawer: NavDrawer(),
+        body: Container(
+          child: buildStream(),
+        ));
   }
 }
-
