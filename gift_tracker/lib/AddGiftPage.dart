@@ -77,7 +77,7 @@ class _AddGiftPage extends State<AddGiftPage>
     newGift.giftDateAdded = formatted;
 
     giftPriceController.text.isEmpty ?
-      newGift.giftPrice = -10.0 : newGift.giftPrice = double.parse(giftPriceController.text);
+      newGift.giftPrice = 0.0 : newGift.giftPrice = double.parse(giftPriceController.text);
 
     newGift.giftPriority = giftPriority;
 
