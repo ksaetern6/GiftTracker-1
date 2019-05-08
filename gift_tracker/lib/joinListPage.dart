@@ -6,6 +6,7 @@ import 'AddGiftPage.dart';
 import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'models/Gift.dart';
+import 'linkList.dart';
 
 class joinListPage extends StatefulWidget {
   @override
@@ -65,7 +66,12 @@ class _joinListPage extends State<joinListPage> {
   buildCards(int index){
     return Card(
       elevation: 2.0,
-      child: Text(linkList[index]),
+      shape: CircleBorder(),
+      child: ListTile(
+        title: Center(child: Text('$index', style: TextStyle(fontSize: 25.0),)),
+        onTap: () => Navigator.push(context,
+        MaterialPageRoute(builder: (context) => linkPage(userID: linkList[index]))),
+      )
     );
    }
   addLink() {
