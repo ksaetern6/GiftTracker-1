@@ -157,7 +157,7 @@ class _GiftListPage extends State<GiftListPage>
         title: Text(giftList[index].giftName),
 
         trailing: GestureDetector(
-          child: Text("${giftList[index].giftPriority}"),
+          child: Text("${(giftList[index].giftPriority).round()}"),
           onTap: () => print("priority tapped"),
         ),
         onTap: () => print("Open Dialog Here"),
