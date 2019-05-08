@@ -44,8 +44,9 @@ class _AddGiftPage extends State<AddGiftPage>
   final giftDescriptionController = new TextEditingController();
   final giftLinkController = new TextEditingController();
   final giftDateAddedController = new TextEditingController();
-  final giftPriorityController = new TextEditingController();
+  //final giftPriorityController = new TextEditingController();
   final giftPriceController = new TextEditingController();
+  double giftPriority = 10.0;
 
   final FocusNode giftNameFocus = FocusNode();
   final FocusNode giftDescriptionFocus = FocusNode();
@@ -60,12 +61,29 @@ class _AddGiftPage extends State<AddGiftPage>
   {
     Gift newGift = new Gift();
 
-    newGift.giftName = giftNameController.text;
-    newGift.giftDescription = giftDescriptionController.text;
-    newGift.giftLink = giftLinkController.text;
-    newGift.giftDateAdded = giftDateAddedController.text;
-    newGift.giftPriority = int.parse(giftPriorityController.text);
-    newGift.giftPrice = double.parse(giftPriceController.text);
+    giftNameController.text.isEmpty ?
+      newGift.giftName = "No name given" : newGift.giftName = giftNameController.text;
+
+    giftDescriptionController.text.isEmpty ?
+      newGift.giftDescription = "No description given" : newGift.giftDescription = giftDescriptionController.text;
+
+    giftLinkController.text.isEmpty ?
+      newGift.giftLink = "No link given" : newGift.giftLink = giftLinkController.text;
+
+    giftDateAddedController.text.isEmpty ?
+      newGift.giftDateAdded = "No date given" : newGift.giftDateAdded = giftDateAddedController.text;
+
+    giftPriceController.text.isEmpty ?
+      newGift.giftPrice = -10.0 : newGift.giftPrice = double.parse(giftPriceController.text);
+
+    newGift.giftPriority = giftPriority;
+
+
+    //newGift.giftLink = giftLinkController.text;
+    //newGift.giftDateAdded = giftDateAddedController.text;
+    //newGift.giftPriority = int.parse(giftPriorityController.text);
+    //newGift.giftPriority = giftPriority;
+    //newGift.giftPrice = double.parse(giftPriceController.text);
 
     //FirebaseUser user = await FirebaseAuth.instance.currentUser();
     //String userID = user.uid;
@@ -79,20 +97,15 @@ class _AddGiftPage extends State<AddGiftPage>
     });
 
     Navigator.pop(context);
-
-//    widget.giftClass.addGiftToList(widget.giftList,
-//                                   giftNameController.text,
-//                                   giftDescriptionController.text,
-//                                   int.parse(giftPriorityController.text),
-//                                   double.parse(giftPriceController.text),
-//                                   giftLinkController.text,
-//                                   giftDateAddedController.text,
-//                                   false);
-//
-//    widget.giftClass.printList(widget.giftList); // for checking
-//
-//    Navigator.pop(context);
   }
+
+  _sliderChange(prio)
+  {
+    setState(() => giftPriority = prio);
+  }
+
+  sliderValue() { return giftPriority; }
+
 
   // -- Main Widget Builder --//
 
@@ -166,18 +179,20 @@ class _AddGiftPage extends State<AddGiftPage>
               Text("Priority (1 - 10)", style: TextStyle(fontSize: 20.0)),
               SizedBox(width: 10),
               Flexible(
-                  child: TextFormField(
-                    controller: giftPriorityController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    focusNode: giftPriorityFocus,
-                    onFieldSubmitted: (term){
-                      FocusScope.of(context).requestFocus(giftPriceFocus);
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(5.0),
-                    ),
-                  )
+                child: Slider(
+                  activeColor: Colors.indigoAccent,
+                  min: 0.0,
+                  max: 10.0,
+                  onChanged: _sliderChange,
+                  value: sliderValue()
+
+                )
+              ),
+              SizedBox(width: 10),
+              Container(
+                width: 50.0,
+                alignment: Alignment.center,
+                child: Text('${giftPriority.toInt()}')
               ),
               SizedBox(width: 10)
             ],
