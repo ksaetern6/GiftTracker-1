@@ -18,7 +18,7 @@ enum AuthStatus {
 class _initialPageState extends State<initialPage> {
 
   AuthStatus _authStatus = AuthStatus.notSignedIn;
-
+  String userID = "";
   //called every time stateful widget is created (before build)
   @override
   void initState() {
