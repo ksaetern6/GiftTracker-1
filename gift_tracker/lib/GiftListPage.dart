@@ -398,7 +398,7 @@ class _GiftListPage extends State<GiftListPage> {
         }
     );
   }
-  
+
   // -- Main Widget Builder --//
 
   @override
