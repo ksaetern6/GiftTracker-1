@@ -4,7 +4,7 @@ class Gift
 
   String _giftName = "";
   String _giftDescription = "";
-  int _giftPriority = -1;    // priority should be between 0 and 10
+  double _giftPriority = -1.0;    // priority should be between 0 and 10
   double _giftPrice = -1.0;
   String _giftDateAdded = "";
   String _giftLink = "";
@@ -21,7 +21,7 @@ class Gift
 
   String get giftDescription => _giftDescription;
 
-  int get giftPriority => _giftPriority;
+  double get giftPriority => _giftPriority;
 
   double get giftPrice => _giftPrice;
 

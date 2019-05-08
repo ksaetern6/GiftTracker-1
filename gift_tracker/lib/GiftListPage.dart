@@ -13,155 +13,136 @@ enum sortFilter {
   tile,
 }
 
-class GiftListPage extends StatefulWidget
-{
+class GiftListPage extends StatefulWidget {
   final GiftList giftClass;
   final List<Gift> giftList;
 
   final BaseAuth auth;
 
-  GiftListPage({Key key, this.giftClass, this.giftList, this.auth}) : super(key: key);
+  GiftListPage({Key key, this.giftClass, this.giftList, this.auth})
+      : super(key: key);
 
   @override
   _GiftListPage createState() => _GiftListPage();
 }
 
-class _GiftListPage extends State<GiftListPage>
-{
+class _GiftListPage extends State<GiftListPage> {
   String userID = "";
   List<Gift> giftList = List<Gift>();
+  sortFilter filter = sortFilter.tile;
   final Firestore firebaseDB = Firestore.instance;
 
   void initState() {
     super.initState();
     widget.auth.getCurrentUser().then((user) {
-
       setState(() {
         userID = user.uid;
-
       });
-      if(userID == "")
-        print("ERROR: USERID IS NULL");
+      if (userID == "") print("ERROR: USERID IS NULL");
     });
   }
 
-  _buildGiftsList(index)
-  {
-      return new GestureDetector(
-          onTap: ()
-          {
-            // TODO when the gift is tapped the giftee should be able to update the gift parameters
-
-            // TODO later on, ONLY the giftee should be able to tap the gift
-            // TODO  and make updates it
-            print("gift tapped");
-          },
-          child: Card(
-            color: Colors.yellow,
-            elevation: 3,
-            margin: EdgeInsets.all(8),
-            child:Container(
-              padding: EdgeInsets.only(left: 10.0, top: 10.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: Row(
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                      //widget.giftClass.getName(widget.giftList, index),
-                                    "temp",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 30.0,
-                                          fontWeight: FontWeight.bold
-                                      )
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                      //"\$${(widget.giftClass.getPrice(widget.giftList, index)).toString()}",
-                                    "temp",
-                                      style: TextStyle(
-                                          fontSize: 30.0,
-                                          fontStyle: FontStyle.italic
-                                      )
-                                  ),
-
-                                  Text(
-                                      //widget.giftClass.getPriority(widget.giftList, index).toString(),
-                                    "temp",
-                                      style: TextStyle(
-                                          fontSize: 30.0,
-                                          fontStyle: FontStyle.italic
-                                      )
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      )
-                  )
-                ],
-              )
-            )
-          )
-      );
-  }
-  buildStream(){
+  buildStream() {
     return StreamBuilder(
-      stream: firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots(),
-      builder: (context, snapshot) {
-        getGifts(snapshot);
-        return ListView.builder(
-          itemCount: giftList.length,
-          itemBuilder: (context, index){
-            return buildCards(index);
-          },
-        );
-      }
-    );
+        stream: firebaseDB
+            .collection(userID)
+            .document("gifts")
+            .collection("gifts")
+            .snapshots(),
+        builder: (context, snapshot) {
+          getGifts(snapshot);
+          if (filter == sortFilter.tile) {
+            print("building tiles");
+            return ListView.builder(
+              itemCount: giftList.length,
+              itemBuilder: (context, index) {
+                return buildCards(index);
+              },
+            );
+          } else {
+            print("building Grid");
+            return buildGrid();
+          }
+        });
   }
 
-  getGifts(AsyncSnapshot<QuerySnapshot> snap){
-    if(snap.data == null) {
+  getGifts(AsyncSnapshot<QuerySnapshot> snap) {
+    if (snap.data == null) {
       return;
-    }
-    else{
-
+    } else {
       Gift gift = Gift();
-      giftList = snap.data.documents.map((doc) => (gift = Gift.set(
-        doc['name'],doc['description'],doc['priority'],doc['price'],
-        doc['dateAdded'],doc['link'],doc['bought'])
-      )).toList();
-
-    }//else
+      giftList = snap.data.documents
+          .map((doc) => (gift = Gift.set(
+              doc['name'],
+              doc['description'],
+              doc['priority'],
+              doc['price'],
+              doc['dateAdded'],
+              doc['link'],
+              doc['bought'])))
+          .toList();
+    } //else
     print(giftList);
   }
 
-  buildCards(int index){
-
+  buildCards(int index) {
     return Card(
       elevation: 2.0,
       child: ListTile(
         leading: GestureDetector(
           child: Text("\$ ${giftList[index].giftPrice}"),
-              onTap: () => print('price tapped'),
+          onTap: () => print('price tapped'),
         ),
         title: Text(giftList[index].giftName),
-
         trailing: GestureDetector(
-          child: Text("${giftList[index].giftPriority}"),
+          child: Text("${(giftList[index].giftPriority).round()}"),
           onTap: () => print("priority tapped"),
         ),
-        onTap: () => print("Open Dialog Here"),
+        onTap: () => print("${giftList[index].giftName}"),
       ),
+    );
+  }
+
+  buildCardsGrid(index) {
+    return Card(
+        elevation: 2.0,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.only(bottom: 30.0),
+                  child: Text(
+                    giftList[index].giftName,
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  ),
+              Container(
+                //padding: EdgeInsets.only(top: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      "\$${giftList[index].giftPrice}",
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                    Text(
+                      "${giftList[index].giftPriority}",
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                  ],
+                )
+              )
+            ]));
+  }
+
+  buildGrid() {
+    return GridView.builder(
+      itemCount: giftList.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      itemBuilder: (context, index) {
+        return buildCardsGrid(index);
+      },
     );
   }
   // -- Main Widget Builder --//
@@ -175,50 +156,45 @@ class _GiftListPage extends State<GiftListPage>
     ]);
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) => new AddGiftPage(
-                giftClass: widget.giftClass, giftList: widget.giftList, auth: widget.auth
-            )))
-        }
-      ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => new AddGiftPage(
+                              giftClass: widget.giftClass,
+                              giftList: widget.giftList,
+                              auth: widget.auth)))
+                }),
 
-      //backgroundColor: Color.fromRGBO(227, 223, 236, 1.0), //TODO add a nice background color
+        //backgroundColor: Color.fromRGBO(227, 223, 236, 1.0), //TODO add a nice background color
 
-      appBar: AppBar(
-        title: Text("Gift List"), //TODO this should later be the name of the list
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.format_list_bulleted, size: 30.0),
-                onPressed: () => {
-                  print("bullet list called")
-                },
-              ),
-
-              IconButton(
-                icon: Icon(Icons.apps, size: 29.0),
-                onPressed: () => {
-                  print("tiles list called")
-                },
-              ),
-
-              SizedBox(width: 10.0)
-
-            ],
-          )
-        ]
-      ),
-
-      drawer: NavDrawer(),
-
-      body: Container(
-        child: buildStream(),
-      )
-    );
+        appBar: AppBar(
+            title: Text(
+                "Gift List"), //TODO this should later be the name of the list
+            actions: <Widget>[
+              Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.format_list_bulleted, size: 30.0),
+                    onPressed: () => setState(() {
+                          filter = sortFilter.tile;
+                        }),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.apps, size: 29.0),
+                    onPressed: () => setState(() {
+                          filter = sortFilter.grid;
+                        }),
+                  ),
+                  SizedBox(width: 10.0)
+                ],
+              )
+            ]),
+        drawer: NavDrawer(),
+        body: Container(
+          child: buildStream(),
+        ));
   }
 }
-
