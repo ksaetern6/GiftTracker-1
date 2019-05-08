@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'NavDrawer.dart';
 import 'AddGiftPage.dart';
-import 'GiftList.dart';
-import 'Gift.dart';
 import 'auth.dart';
 
 class GiftListPage extends StatefulWidget
 {
-  final GiftList giftClass;
-  final List<Gift> giftList;
-
   final BaseAuth auth;
 
-  GiftListPage({Key key, this.giftClass, this.giftList, this.auth}) : super(key: key);
+  GiftListPage({Key key, this.auth}) : super(key: key);
 
   @override
   _GiftListPage createState() => _GiftListPage();
@@ -131,9 +126,7 @@ class _GiftListPage extends State<GiftListPage>
         child: Icon(Icons.add),
         onPressed: () => {
           Navigator.push(context, MaterialPageRoute(
-            builder: (context) => new AddGiftPage(
-                giftClass: widget.giftClass, giftList: widget.giftList, auth: widget.auth
-            )))
+            builder: (context) => new AddGiftPage(auth: widget.auth)))
         }
       ),
 

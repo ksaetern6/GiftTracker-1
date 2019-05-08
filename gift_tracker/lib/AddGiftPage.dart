@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'GiftList.dart';
 import 'Gift.dart';
 import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,12 +9,9 @@ import 'package:intl/intl.dart';
 
 class AddGiftPage extends StatefulWidget
 {
-  final GiftList giftClass;
-  final List<Gift> giftList;
-
   final BaseAuth auth;
 
-  AddGiftPage({Key key, this.giftClass, this.giftList, this.auth}) : super(key: key);
+  AddGiftPage({Key key, this.auth}) : super(key: key);
 
   @override
   _AddGiftPage createState() => _AddGiftPage();
@@ -164,7 +160,7 @@ class _AddGiftPage extends State<AddGiftPage>
                     textInputAction: TextInputAction.next,
                     focusNode: giftDescriptionFocus,
                     onFieldSubmitted: (term){
-                      FocusScope.of(context).requestFocus(giftPriorityFocus);
+                      FocusScope.of(context).requestFocus(giftPriceFocus);
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(5.0),
