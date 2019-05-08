@@ -5,6 +5,8 @@ import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
 
 class AddGiftPage extends StatefulWidget
 {
@@ -43,9 +45,9 @@ class _AddGiftPage extends State<AddGiftPage>
   final giftNameController = new TextEditingController();
   final giftDescriptionController = new TextEditingController();
   final giftLinkController = new TextEditingController();
-  final giftDateAddedController = new TextEditingController();
-  final giftPriorityController = new TextEditingController();
+  //final giftPriorityController = new TextEditingController();
   final giftPriceController = new TextEditingController();
+  double giftPriority = 10.0;
 
   final FocusNode giftNameFocus = FocusNode();
   final FocusNode giftDescriptionFocus = FocusNode();
@@ -60,12 +62,31 @@ class _AddGiftPage extends State<AddGiftPage>
   {
     Gift newGift = new Gift();
 
-    newGift.giftName = giftNameController.text;
-    newGift.giftDescription = giftDescriptionController.text;
-    newGift.giftLink = giftLinkController.text;
-    newGift.giftDateAdded = giftDateAddedController.text;
-    newGift.giftPriority = int.parse(giftPriorityController.text);
-    newGift.giftPrice = double.parse(giftPriceController.text);
+    giftNameController.text.isEmpty ?
+      newGift.giftName = "No name given" : newGift.giftName = giftNameController.text;
+
+    giftDescriptionController.text.isEmpty ?
+      newGift.giftDescription = "No description given" : newGift.giftDescription = giftDescriptionController.text;
+
+    giftLinkController.text.isEmpty ?
+      newGift.giftLink = "No link given" : newGift.giftLink = giftLinkController.text;
+
+    var now = new DateTime.now();
+    var formatter = new DateFormat('MMMM d y');
+    String formatted = formatter.format(now);
+    newGift.giftDateAdded = formatted;
+
+    giftPriceController.text.isEmpty ?
+      newGift.giftPrice = -10.0 : newGift.giftPrice = double.parse(giftPriceController.text);
+
+    newGift.giftPriority = giftPriority;
+
+
+    //newGift.giftLink = giftLinkController.text;
+    //newGift.giftDateAdded = giftDateAddedController.text;
+    //newGift.giftPriority = int.parse(giftPriorityController.text);
+    //newGift.giftPriority = giftPriority;
+    //newGift.giftPrice = double.parse(giftPriceController.text);
 
     //FirebaseUser user = await FirebaseAuth.instance.currentUser();
     //String userID = user.uid;
@@ -79,20 +100,15 @@ class _AddGiftPage extends State<AddGiftPage>
     });
 
     Navigator.pop(context);
-
-//    widget.giftClass.addGiftToList(widget.giftList,
-//                                   giftNameController.text,
-//                                   giftDescriptionController.text,
-//                                   int.parse(giftPriorityController.text),
-//                                   double.parse(giftPriceController.text),
-//                                   giftLinkController.text,
-//                                   giftDateAddedController.text,
-//                                   false);
-//
-//    widget.giftClass.printList(widget.giftList); // for checking
-//
-//    Navigator.pop(context);
   }
+
+  _sliderChange(prio)
+  {
+    setState(() => giftPriority = prio);
+  }
+
+  sliderValue() { return giftPriority; }
+
 
   // -- Main Widget Builder --//
 
@@ -163,21 +179,24 @@ class _AddGiftPage extends State<AddGiftPage>
           Row( //TODO later make this a dropdown or slider or something better
             children: <Widget>[
               SizedBox(width: 7),
-              Text("Priority (1 - 10)", style: TextStyle(fontSize: 20.0)),
+              Text("Priority", style: TextStyle(fontSize: 20.0)),
               SizedBox(width: 10),
               Flexible(
-                  child: TextFormField(
-                    controller: giftPriorityController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.number,
-                    focusNode: giftPriorityFocus,
-                    onFieldSubmitted: (term){
-                      FocusScope.of(context).requestFocus(giftPriceFocus);
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(5.0),
-                    ),
-                  )
+                child: Slider(
+                  activeColor: Colors.purple,
+                  inactiveColor: Colors.black12,
+                  min: 0.0,
+                  max: 10.0,
+                  onChanged: _sliderChange,
+                  value: sliderValue()
+
+                )
+              ),
+              SizedBox(width: 10),
+              Container(
+                width: 50.0,
+                alignment: Alignment.center,
+                child: Text('${giftPriority.toInt()}')
               ),
               SizedBox(width: 10)
             ],
@@ -198,7 +217,7 @@ class _AddGiftPage extends State<AddGiftPage>
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (term){
-                      FocusScope.of(context).requestFocus(giftDateAddedFocus);
+                      FocusScope.of(context).requestFocus(giftLinkFocus);
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(5.0),
@@ -210,29 +229,29 @@ class _AddGiftPage extends State<AddGiftPage>
             ],
           ),
 
-          SizedBox(height: 15),
-          Row( //TODO later make this automatically fill with the current date
-            children: <Widget>[
-              SizedBox(width: 7),
-              Text("Date Added", style: TextStyle(fontSize: 20.0)),
-              SizedBox(width: 10),
-              Flexible(
-                  child: TextFormField(
-                    controller: giftDateAddedController,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.datetime,
-                    focusNode: giftDateAddedFocus,
-                    onFieldSubmitted: (term){
-                      FocusScope.of(context).requestFocus(giftLinkFocus);
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(5.0),
-                    ),
-                  )
-              ),
-              SizedBox(width: 10)
-            ],
-          ),
+//          SizedBox(height: 15),
+//          Row( //TODO later make this automatically fill with the current date
+//            children: <Widget>[
+//              SizedBox(width: 7),
+//              Text("Date Added", style: TextStyle(fontSize: 20.0)),
+//              SizedBox(width: 10),
+//              Flexible(
+//                  child: TextFormField(
+//                    controller: giftDateAddedController,
+//                    textInputAction: TextInputAction.next,
+//                    keyboardType: TextInputType.datetime,
+//                    focusNode: giftDateAddedFocus,
+//                    onFieldSubmitted: (term){
+//                      FocusScope.of(context).requestFocus(giftLinkFocus);
+//                    },
+//                    decoration: InputDecoration(
+//                      contentPadding: EdgeInsets.all(5.0),
+//                    ),
+//                  )
+//              ),
+//              SizedBox(width: 10)
+//            ],
+//          ),
 
           SizedBox(height: 15),
           Row(
