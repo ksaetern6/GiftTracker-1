@@ -3,7 +3,7 @@ import 'auth.dart';
 import 'NavDrawer.dart';
 import 'GiftListPage.dart';
 import 'GiftList.dart';
-import 'Gift.dart';
+import 'package:gift_tracker/models/Gift.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({this.auth, this.onSignedOut});

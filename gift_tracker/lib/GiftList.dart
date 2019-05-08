@@ -1,4 +1,4 @@
-import 'Gift.dart';
+import 'package:gift_tracker/models/Gift.dart';
 
 class GiftList
 {

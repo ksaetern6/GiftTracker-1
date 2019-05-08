@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'GiftListPage.dart';
 import 'GiftList.dart';
-import 'Gift.dart';
+import 'package:gift_tracker/models/Gift.dart';
 import 'HomePage.dart';
 import 'auth.dart';
 

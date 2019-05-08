@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'NavDrawer.dart';
 import 'AddGiftPage.dart';
 import 'GiftList.dart';
-import 'Gift.dart';
+import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
+import 'models/Gift.dart';
+
+enum sortFilter {
+  grid,
+  tile,
+}
 
 class GiftListPage extends StatefulWidget
 {
@@ -22,6 +29,8 @@ class GiftListPage extends StatefulWidget
 class _GiftListPage extends State<GiftListPage>
 {
   String userID = "";
+  List<Gift> giftList = List<Gift>();
+  final Firestore firebaseDB = Firestore.instance;
 
   void initState() {
     super.initState();
@@ -38,16 +47,6 @@ class _GiftListPage extends State<GiftListPage>
 
   _buildGiftsList(index)
   {
-//    if(widget.giftClass.isListEmpty(widget.giftList))
-//      return new Center( //TODO make this something better looking
-//          child: Text("Your list is empty! \n"
-//                      "Add some gifts and they will be displayed here!",
-//                 style: TextStyle(
-//                    fontSize: 30.0,
-//                    fontWeight: FontWeight.bold)
-//          )
-//      );
-//    else
       return new GestureDetector(
           onTap: ()
           {
@@ -115,7 +114,56 @@ class _GiftListPage extends State<GiftListPage>
           )
       );
   }
+  buildStream(){
+    return StreamBuilder(
+      stream: firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots(),
+      builder: (context, snapshot) {
+        getGifts(snapshot);
+        return ListView.builder(
+          itemCount: giftList.length,
+          itemBuilder: (context, index){
+            return buildCards(index);
+          },
+        );
+      }
+    );
+  }
 
+  getGifts(AsyncSnapshot<QuerySnapshot> snap){
+    if(snap.data == null) {
+      return;
+    }
+    else{
+
+      Gift gift = Gift();
+      giftList = snap.data.documents.map((doc) => (gift = Gift.set(
+        doc['name'],doc['description'],doc['priority'],doc['price'],
+        doc['dateAdded'],doc['link'],doc['bought'])
+      )).toList();
+
+    }//else
+    print(giftList);
+  }
+
+  buildCards(int index){
+
+    return Card(
+      elevation: 2.0,
+      child: ListTile(
+        leading: GestureDetector(
+          child: Text("\$ ${giftList[index].giftPrice}"),
+              onTap: () => print('price tapped'),
+        ),
+        title: Text(giftList[index].giftName),
+
+        trailing: GestureDetector(
+          child: Text("${giftList[index].giftPriority}"),
+          onTap: () => print("priority tapped"),
+        ),
+        onTap: () => print("Open Dialog Here"),
+      ),
+    );
+  }
   // -- Main Widget Builder --//
 
   @override
@@ -168,10 +216,7 @@ class _GiftListPage extends State<GiftListPage>
       drawer: NavDrawer(),
 
       body: Container(
-//        child: ListView.builder(
-//          itemCount: widget.giftClass.getLengthOfList(widget.giftList),
-//          itemBuilder: (BuildContext context, int index) => _buildGiftsList(index)
-//        )
+        child: buildStream(),
       )
     );
   }
