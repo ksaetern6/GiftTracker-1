@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'NavDrawer.dart';
 import 'GiftListPage.dart';
-import 'GiftList.dart';
-import 'package:gift_tracker/models/Gift.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({this.auth, this.onSignedOut});
@@ -84,17 +82,6 @@ class HomePage extends StatelessWidget {
 
   void _NavtoGiftListPage(context)
   {
-    // TODO create the entry in firebase here for the user
-
-
-    GiftList giftClass = GiftList();
-    List<Gift> giftList = List<Gift>();
-
-    print('Create List Tapped!');
-
-    Navigator.push(context, MaterialPageRoute(builder:
-        (context) => GiftListPage(
-          giftClass: giftClass, giftList: giftList, auth: Auth(),
-        )));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => GiftListPage(auth: Auth())));
   }
 }

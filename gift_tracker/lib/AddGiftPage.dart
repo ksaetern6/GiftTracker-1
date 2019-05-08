@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'GiftList.dart';
 import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-
 
 class AddGiftPage extends StatefulWidget
 {
-  final GiftList giftClass;
-  final List<Gift> giftList;
-
   final BaseAuth auth;
 
-  AddGiftPage({Key key, this.giftClass, this.giftList, this.auth}) : super(key: key);
+  AddGiftPage({Key key, this.auth}) : super(key: key);
 
   @override
   _AddGiftPage createState() => _AddGiftPage();
@@ -164,7 +158,7 @@ class _AddGiftPage extends State<AddGiftPage>
                     textInputAction: TextInputAction.next,
                     focusNode: giftDescriptionFocus,
                     onFieldSubmitted: (term){
-                      FocusScope.of(context).requestFocus(giftPriorityFocus);
+                      FocusScope.of(context).requestFocus(giftPriceFocus);
                     },
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(5.0),
@@ -176,7 +170,7 @@ class _AddGiftPage extends State<AddGiftPage>
           ),
 
           SizedBox(height: 15),
-          Row( //TODO later make this a dropdown or slider or something better
+          Row(
             children: <Widget>[
               SizedBox(width: 7),
               Text("Priority", style: TextStyle(fontSize: 20.0)),
@@ -202,8 +196,6 @@ class _AddGiftPage extends State<AddGiftPage>
             ],
           ),
 
-          //TODO this needs to have some kind of validation and a $ sign needs
-          //TODO   to be appended
           SizedBox(height: 15),
           Row(
             children: <Widget>[
@@ -228,30 +220,6 @@ class _AddGiftPage extends State<AddGiftPage>
               SizedBox(width: 10)
             ],
           ),
-
-//          SizedBox(height: 15),
-//          Row( //TODO later make this automatically fill with the current date
-//            children: <Widget>[
-//              SizedBox(width: 7),
-//              Text("Date Added", style: TextStyle(fontSize: 20.0)),
-//              SizedBox(width: 10),
-//              Flexible(
-//                  child: TextFormField(
-//                    controller: giftDateAddedController,
-//                    textInputAction: TextInputAction.next,
-//                    keyboardType: TextInputType.datetime,
-//                    focusNode: giftDateAddedFocus,
-//                    onFieldSubmitted: (term){
-//                      FocusScope.of(context).requestFocus(giftLinkFocus);
-//                    },
-//                    decoration: InputDecoration(
-//                      contentPadding: EdgeInsets.all(5.0),
-//                    ),
-//                  )
-//              ),
-//              SizedBox(width: 10)
-//            ],
-//          ),
 
           SizedBox(height: 15),
           Row(

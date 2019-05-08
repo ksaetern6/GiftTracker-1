@@ -3,24 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'NavDrawer.dart';
 import 'AddGiftPage.dart';
-import 'GiftList.dart';
 import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'models/Gift.dart';
+import 'package:intl/intl.dart';
 
 enum sortFilter {
   grid,
   tile,
 }
 
-class GiftListPage extends StatefulWidget {
-  final GiftList giftClass;
-  final List<Gift> giftList;
 
+class GiftListPage extends StatefulWidget
+{
   final BaseAuth auth;
 
-  GiftListPage({Key key, this.giftClass, this.giftList, this.auth})
-      : super(key: key);
+  GiftListPage({Key key, this.auth}) : super(key: key);
 
   @override
   _GiftListPage createState() => _GiftListPage();
@@ -32,6 +30,22 @@ class _GiftListPage extends State<GiftListPage> {
   sortFilter filter = sortFilter.tile;
   final Firestore firebaseDB = Firestore.instance;
 
+  // controllers and focus nodes
+
+  final giftNameController = new TextEditingController();
+  final giftDescriptionController = new TextEditingController();
+  final giftLinkController = new TextEditingController();
+  final giftPriceController = new TextEditingController();
+  final giftPriorityController = new TextEditingController();
+
+  final FocusNode giftNameFocus = FocusNode();
+  final FocusNode giftDescriptionFocus = FocusNode();
+  final FocusNode giftLinkFocus = FocusNode();
+  final FocusNode giftDateAddedFocus = FocusNode();
+  final FocusNode giftPriorityFocus = FocusNode();
+  final FocusNode giftPriceFocus = FocusNode();
+
+
   void initState() {
     super.initState();
     widget.auth.getCurrentUser().then((user) {
@@ -42,7 +56,8 @@ class _GiftListPage extends State<GiftListPage> {
     });
   }
 
-  buildStream() {
+
+  buildStream(){
     return StreamBuilder(
         stream: firebaseDB
             .collection(userID)
@@ -84,8 +99,8 @@ class _GiftListPage extends State<GiftListPage> {
     } //else
     print(giftList);
   }
-
   buildCards(int index) {
+
     return Card(
       elevation: 2.0,
       child: ListTile(
@@ -98,7 +113,7 @@ class _GiftListPage extends State<GiftListPage> {
           child: Text("${(giftList[index].giftPriority).round()}"),
           onTap: () => print("priority tapped"),
         ),
-        onTap: () => print("${giftList[index].giftName}"),
+        onTap: () => showUpdateDialog(giftList[index], index),
       ),
     );
   }
@@ -145,6 +160,224 @@ class _GiftListPage extends State<GiftListPage> {
       },
     );
   }
+  updateGift(giftList, index) async
+  {
+    Gift newGift = new Gift();
+
+    giftNameController.text.isEmpty ?
+    newGift.giftName = giftList.giftName : newGift.giftName = giftNameController.text;
+
+    giftDescriptionController.text.isEmpty ?
+    newGift.giftDescription = giftList.giftDescription : newGift.giftDescription = giftDescriptionController.text;
+
+    giftLinkController.text.isEmpty ?
+    newGift.giftLink = giftList.giftLink : newGift.giftLink = giftLinkController.text;
+
+    newGift.giftDateAdded = giftList.giftDateAdded;
+
+    giftPriceController.text.isEmpty ?
+    newGift.giftPrice = giftList.giftPrice : newGift.giftPrice = double.parse(giftPriceController.text);
+
+    giftPriorityController.text.isEmpty ?
+    newGift.giftPriority = giftList.giftPriority : newGift.giftPriority= double.parse(giftPriorityController.text);
+
+    var foundDocID;
+    var doc;
+    firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots().listen((snapshot)
+    {
+      foundDocID = snapshot.documents.elementAt(index).documentID.toString();
+
+      doc = firebaseDB.collection(userID).document("gifts").collection("gifts").document(foundDocID);
+    });
+    try {
+      firebaseDB.runTransaction((transaction) async {
+        await transaction.update(
+            doc, newGift.toMap());
+      });
+    }
+    catch(e){
+      print("error here");
+      print(e);
+  }
+
+    giftLinkController.clear();
+    giftPriorityController.clear();
+    giftNameController.clear();
+    giftPriceController.clear();
+    giftDescriptionController.clear();
+
+    Navigator.pop(context);
+  }
+
+  showUpdateDialog(giftList, index)
+  {
+    showDialog(
+      context: context,
+      builder: (BuildContext context)
+      {
+        return AlertDialog(
+          title: Text("Update Gift"),
+          content: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text("Gift Name", style: TextStyle(fontSize: 20.0)),
+                  SizedBox(width: 10),
+                  Flexible( // flexible means the text field can take up the rest of the window
+                      child: TextFormField(
+                        controller: giftNameController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: giftNameFocus,
+                        onFieldSubmitted: (term){
+                          FocusScope.of(context).requestFocus(giftDescriptionFocus);
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5.0),
+                        ),
+                      )
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 15),
+              Row(
+                children: <Widget>[
+                  SizedBox(width: 7),
+                  Text("Description", style: TextStyle(fontSize: 20.0)),
+                  SizedBox(width: 10),
+                  Flexible(
+                      child: TextFormField(
+                        controller: giftDescriptionController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: giftDescriptionFocus,
+                        onFieldSubmitted: (term){
+                          FocusScope.of(context).requestFocus(giftPriorityFocus);
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5.0),
+                        ),
+                      )
+                  ),
+                  SizedBox(width: 10)
+                ],
+              ),
+
+              SizedBox(height: 15),
+              Row( //TODO slider doesn't work
+                children: <Widget>[
+                  SizedBox(width: 7),
+                  Text("Priority (1 - 10)", style: TextStyle(fontSize: 20.0)),
+                  SizedBox(width: 10),
+                  Flexible(
+                      child: TextFormField(
+                        controller: giftPriorityController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: giftPriorityFocus,
+                        onFieldSubmitted: (term){
+                          FocusScope.of(context).requestFocus(giftPriceFocus);
+                        },
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5.0),
+                        ),
+                      )
+                  ),
+                  SizedBox(width: 10),
+                ],
+              ),
+
+              SizedBox(height: 15),
+              Row(
+                children: <Widget>[
+                  SizedBox(width: 7),
+                  Text("Price", style: TextStyle(fontSize: 20.0)),
+                  SizedBox(width: 10),
+                  Flexible(
+                      child: TextFormField(
+                        controller: giftPriceController,
+                        focusNode: giftPriceFocus,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (term){
+                          FocusScope.of(context).requestFocus(giftLinkFocus);
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            hintText: 'In Dollars, no \'\$\''
+                        ),
+                      )
+                  ),
+                  SizedBox(width: 10)
+                ],
+              ),
+
+              SizedBox(height: 15),
+              Row(
+                children: <Widget>[
+                  SizedBox(width: 7),
+                  Text("Link", style: TextStyle(fontSize: 20.0)),
+                  SizedBox(width: 10),
+                  Flexible(
+                      child: TextFormField(
+                        controller: giftLinkController,
+                        textInputAction: TextInputAction.done,
+                        focusNode: giftLinkFocus,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5.0),
+                        ),
+                      )
+                  ),
+                  SizedBox(width: 10)
+                ],
+              ),
+
+            ],
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+
+                SizedBox(width: 10),
+                RaisedButton(
+                  child: Text(
+                    "Delete Gift",
+                    style: TextStyle(color: Colors.black)
+                  ),
+                  onPressed: () { print("delete gift"); /* TODO delete gift */ } ,
+                ),
+                SizedBox(width: 10),
+
+                SizedBox(width: 10),
+
+                RaisedButton(
+                  child: Text(
+                    "Update gift",
+                    style: TextStyle(color: Colors.black)
+                  ),
+                  onPressed: () => updateGift(giftList, index)
+                ),
+                SizedBox(width: 10),
+
+                SizedBox(width: 10),
+                RaisedButton(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.black)
+                   ),
+                  onPressed: () { Navigator.of(context).pop(); } ,
+                ),
+                SizedBox(width: 25),
+
+              ],
+            )
+          ],
+        );
+      }
+    );
+  }
+
+
   // -- Main Widget Builder --//
 
   @override
@@ -163,8 +396,6 @@ class _GiftListPage extends State<GiftListPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => new AddGiftPage(
-                              giftClass: widget.giftClass,
-                              giftList: widget.giftList,
                               auth: widget.auth)))
                 }),
 
