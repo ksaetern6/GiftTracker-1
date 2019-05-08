@@ -8,6 +8,7 @@ import 'auth.dart';
 
 class NavDrawer extends StatelessWidget
 {
+  final BaseAuth auth = Auth();
   @override
   Widget build(BuildContext context){
     // forces portrait usage of this page/widget
@@ -57,7 +58,7 @@ class NavDrawer extends StatelessWidget
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => GiftListPage(
-                        giftClass: giftClass, giftList: giftList, auth: Auth(),
+                        giftClass: giftClass, giftList: giftList, auth: auth,
                     )));
               },
             ),
