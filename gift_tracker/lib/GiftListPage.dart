@@ -183,11 +183,12 @@ class _GiftListPage extends State<GiftListPage> {
 
     var foundDocID;
     var doc;
-    firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots().listen((snapshot)
+    firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots().listen((snapshot) async
     {
       foundDocID = snapshot.documents.elementAt(index).documentID.toString();
 
       doc = firebaseDB.collection(userID).document("gifts").collection("gifts").document(foundDocID);
+
     });
     try {
       firebaseDB.runTransaction((transaction) async {
@@ -209,175 +210,195 @@ class _GiftListPage extends State<GiftListPage> {
     Navigator.pop(context);
   }
 
-  showUpdateDialog(giftList, index)
+  deleteGift(giftList, index)
   {
-    showDialog(
-      context: context,
-      builder: (BuildContext context)
-      {
-        return AlertDialog(
-          title: Text("Update Gift"),
-          content: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text("Gift Name", style: TextStyle(fontSize: 20.0)),
-                  SizedBox(width: 10),
-                  Flexible( // flexible means the text field can take up the rest of the window
-                      child: TextFormField(
-                        controller: giftNameController,
-                        textInputAction: TextInputAction.next,
-                        focusNode: giftNameFocus,
-                        onFieldSubmitted: (term){
-                          FocusScope.of(context).requestFocus(giftDescriptionFocus);
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                        ),
-                      )
-                  ),
-                ],
-              ),
+    var foundDocID;
+    var doc;
+    firebaseDB.collection(userID).document("gifts").collection("gifts").snapshots().listen((snapshot) async
+    {
+      foundDocID = snapshot.documents.elementAt(index).documentID.toString();
 
-              SizedBox(height: 15),
-              Row(
-                children: <Widget>[
-                  SizedBox(width: 7),
-                  Text("Description", style: TextStyle(fontSize: 20.0)),
-                  SizedBox(width: 10),
-                  Flexible(
-                      child: TextFormField(
-                        controller: giftDescriptionController,
-                        textInputAction: TextInputAction.next,
-                        focusNode: giftDescriptionFocus,
-                        onFieldSubmitted: (term){
-                          FocusScope.of(context).requestFocus(giftPriorityFocus);
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                        ),
-                      )
-                  ),
-                  SizedBox(width: 10)
-                ],
-              ),
+      doc = firebaseDB.collection(userID).document("gifts").collection("gifts").document(foundDocID);
 
-              SizedBox(height: 15),
-              Row( //TODO slider doesn't work
-                children: <Widget>[
-                  SizedBox(width: 7),
-                  Text("Priority (1 - 10)", style: TextStyle(fontSize: 20.0)),
-                  SizedBox(width: 10),
-                  Flexible(
-                      child: TextFormField(
-                        controller: giftPriorityController,
-                        textInputAction: TextInputAction.next,
-                        focusNode: giftPriorityFocus,
-                        onFieldSubmitted: (term){
-                          FocusScope.of(context).requestFocus(giftPriceFocus);
-                        },
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                        ),
-                      )
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
+    });
 
-              SizedBox(height: 15),
-              Row(
-                children: <Widget>[
-                  SizedBox(width: 7),
-                  Text("Price", style: TextStyle(fontSize: 20.0)),
-                  SizedBox(width: 10),
-                  Flexible(
-                      child: TextFormField(
-                        controller: giftPriceController,
-                        focusNode: giftPriceFocus,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (term){
-                          FocusScope.of(context).requestFocus(giftLinkFocus);
-                        },
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(5.0),
-                            hintText: 'In Dollars, no \'\$\''
-                        ),
-                      )
-                  ),
-                  SizedBox(width: 10)
-                ],
-              ),
+    firebaseDB.runTransaction((transaction) async {
+      await transaction.delete(doc);
+    });
 
-              SizedBox(height: 15),
-              Row(
-                children: <Widget>[
-                  SizedBox(width: 7),
-                  Text("Link", style: TextStyle(fontSize: 20.0)),
-                  SizedBox(width: 10),
-                  Flexible(
-                      child: TextFormField(
-                        controller: giftLinkController,
-                        textInputAction: TextInputAction.done,
-                        focusNode: giftLinkFocus,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                        ),
-                      )
-                  ),
-                  SizedBox(width: 10)
-                ],
-              ),
-
-            ],
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-
-                SizedBox(width: 10),
-                RaisedButton(
-                  child: Text(
-                    "Delete Gift",
-                    style: TextStyle(color: Colors.black)
-                  ),
-                  onPressed: () { print("delete gift"); /* TODO delete gift */ } ,
-                ),
-                SizedBox(width: 10),
-
-                SizedBox(width: 10),
-
-                RaisedButton(
-                  child: Text(
-                    "Update gift",
-                    style: TextStyle(color: Colors.black)
-                  ),
-                  onPressed: () => updateGift(giftList, index)
-                ),
-                SizedBox(width: 10),
-
-                SizedBox(width: 10),
-                RaisedButton(
-                  child: Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.black)
-                   ),
-                  onPressed: () { Navigator.of(context).pop(); } ,
-                ),
-                SizedBox(width: 25),
-
-              ],
-            )
-          ],
-        );
-      }
-    );
+    Navigator.pop(context);
   }
 
+  showUpdateDialog(giftList, index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Update Gift"),
+            content: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text("Gift Name", style: TextStyle(fontSize: 20.0)),
+                    SizedBox(width: 10),
+                    Flexible( // flexible means the text field can take up the rest of the window
+                        child: TextFormField(
+                          controller: giftNameController,
+                          textInputAction: TextInputAction.next,
+                          focusNode: giftNameFocus,
+                          onFieldSubmitted: (term) {
+                            FocusScope.of(context).requestFocus(
+                                giftDescriptionFocus);
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                          ),
+                        )
+                    ),
+                  ],
+                ),
 
+                SizedBox(height: 15),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 7),
+                    Text("Description", style: TextStyle(fontSize: 20.0)),
+                    SizedBox(width: 10),
+                    Flexible(
+                        child: TextFormField(
+                          controller: giftDescriptionController,
+                          textInputAction: TextInputAction.next,
+                          focusNode: giftDescriptionFocus,
+                          onFieldSubmitted: (term) {
+                            FocusScope.of(context).requestFocus(
+                                giftPriorityFocus);
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                          ),
+                        )
+                    ),
+                    SizedBox(width: 10)
+                  ],
+                ),
+
+                SizedBox(height: 15),
+                Row( //TODO slider doesn't work
+                  children: <Widget>[
+                    SizedBox(width: 7),
+                    Text("Priority (1 - 10)", style: TextStyle(fontSize: 20.0)),
+                    SizedBox(width: 10),
+                    Flexible(
+                        child: TextFormField(
+                          controller: giftPriorityController,
+                          textInputAction: TextInputAction.next,
+                          focusNode: giftPriorityFocus,
+                          onFieldSubmitted: (term) {
+                            FocusScope.of(context).requestFocus(giftPriceFocus);
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                          ),
+                        )
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                ),
+
+                SizedBox(height: 15),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 7),
+                    Text("Price", style: TextStyle(fontSize: 20.0)),
+                    SizedBox(width: 10),
+                    Flexible(
+                        child: TextFormField(
+                          controller: giftPriceController,
+                          focusNode: giftPriceFocus,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (term) {
+                            FocusScope.of(context).requestFocus(giftLinkFocus);
+                          },
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(5.0),
+                              hintText: 'In Dollars, no \'\$\''
+                          ),
+                        )
+                    ),
+                    SizedBox(width: 10)
+                  ],
+                ),
+
+                SizedBox(height: 15),
+                Row(
+                  children: <Widget>[
+                    SizedBox(width: 7),
+                    Text("Link", style: TextStyle(fontSize: 20.0)),
+                    SizedBox(width: 10),
+                    Flexible(
+                        child: TextFormField(
+                          controller: giftLinkController,
+                          textInputAction: TextInputAction.done,
+                          focusNode: giftLinkFocus,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                          ),
+                        )
+                    ),
+                    SizedBox(width: 10)
+                  ],
+                ),
+
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+
+                  SizedBox(width: 10),
+                  RaisedButton(
+                    child: Text(
+                        "Delete Gift",
+                        style: TextStyle(color: Colors.black)
+                    ),
+                    onPressed: () => deleteGift(giftList, index)
+                  ),
+                  SizedBox(width: 10),
+
+                  SizedBox(width: 10),
+
+                  RaisedButton(
+                      child: Text(
+                          "Update gift",
+                          style: TextStyle(color: Colors.black)
+                      ),
+                      onPressed: () => updateGift(giftList, index)
+                  ),
+                  SizedBox(width: 10),
+
+                  SizedBox(width: 10),
+                  RaisedButton(
+                    child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.black)
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(width: 25),
+
+                ],
+              )
+            ],
+          );
+        }
+    );
+  }
+  
   // -- Main Widget Builder --//
 
   @override
