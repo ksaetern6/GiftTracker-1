@@ -85,7 +85,7 @@ class _GiftDetailsPage extends State<GiftDetailsPage> {
                     ),
                     SizedBox(width: 10),
                     Text(
-                        "${widget.gift.giftPriority}",
+                        "${(widget.gift.giftPriority).round()}",
                         style: TextStyle(fontSize: 20)
                     )
                   ],
@@ -132,10 +132,15 @@ class _GiftDetailsPage extends State<GiftDetailsPage> {
                         style: TextStyle(fontSize: 17)
                     ),
                     SizedBox(width: 10),
+                    Flexible(
+                      child:
+
                     Text(
                         "${widget.gift.giftLink}",
-                        style: TextStyle(fontSize: 20)
-                    )
+                        style: TextStyle(fontSize: 20),
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
+                    )),
                   ],
                 ),
 

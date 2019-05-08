@@ -7,6 +7,7 @@ import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'models/Gift.dart';
 import 'linkList.dart';
+import 'models/LinkList.dart';
 
 class joinListPage extends StatefulWidget {
   @override
@@ -14,8 +15,11 @@ class joinListPage extends StatefulWidget {
 }
 
 class _joinListPage extends State<joinListPage> {
+
   final linkController = TextEditingController();
-  List<dynamic> linkList = List<dynamic>();
+  final linkNameController = TextEditingController();
+
+  List<LinkList> linkList = List<LinkList>();
   String myUserID = "";
   Auth auth = Auth();
 
@@ -44,10 +48,17 @@ class _joinListPage extends State<joinListPage> {
   }
 
   getLinks(AsyncSnapshot<QuerySnapshot> snap) {
+
+    LinkList tempList = LinkList();
+
     if (snap.data == null) {
       return;
     } else {
-      linkList = snap.data.documents.map((doc) => doc['link']).toList();
+      linkList = snap.data.documents.map((doc) => (tempList = LinkList.set(
+        doc['name'], doc['link']
+      ))).toList();
+
+
     }
     print(linkList);
   }
@@ -68,9 +79,10 @@ class _joinListPage extends State<joinListPage> {
       elevation: 2.0,
       shape: CircleBorder(),
       child: ListTile(
-        title: Center(child: Text('$index', style: TextStyle(fontSize: 25.0),)),
+        //title: Center(child: Text('$index', style: TextStyle(fontSize: 25.0),)),
+        title: Center(child: Text('${linkList[index].linkName}', style: TextStyle(fontSize: 25.0),)),
         onTap: () => Navigator.push(context,
-        MaterialPageRoute(builder: (context) => linkPage(userID: linkList[index]))),
+        MaterialPageRoute(builder: (context) => linkPage(userID: linkList[index].linkLink))),
       )
     );
    }
@@ -79,14 +91,32 @@ class _joinListPage extends State<joinListPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Paste Link Here!',
-                icon: Icon(Icons.content_paste),
-              ),
-              validator: (value) => value.isEmpty ? 'Cannot be empty' : null,
-              controller: linkController,
+            content: Container(
+              height: 200,
+              child:
+            Column(
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Name of list',
+                    icon: Icon(Icons.create),
+                  ),
+                  validator: (value) => value.isEmpty ? 'Cannot be empty' : null,
+                  controller: linkNameController,
+                ),
+
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Paste Link Here!',
+                    icon: Icon(Icons.content_paste),
+                  ),
+                  validator: (value) => value.isEmpty ? 'Cannot be empty' : null,
+                  controller: linkController,
+                ),
+              ],
             ),
+            ),
+
             actions: <Widget>[
               RaisedButton(
                 child: Text("Add"),
@@ -103,6 +133,7 @@ class _joinListPage extends State<joinListPage> {
   addLinkDB() {
     var myMap = Map<String, dynamic>();
     myMap['link'] = linkController.text;
+    myMap['name'] = linkNameController.text;
     var doc = Firestore.instance
         .collection(myUserID)
         .document('sharedLists')

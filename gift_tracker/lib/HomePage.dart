@@ -5,7 +5,8 @@ import 'GiftListPage.dart';
 import 'package:flutter/services.dart';
 import 'joinListPage.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget
+{
   HomePage({this.auth, this.onSignedOut});
 
   final BaseAuth auth;

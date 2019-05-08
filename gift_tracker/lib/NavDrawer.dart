@@ -4,10 +4,12 @@ import 'GiftListPage.dart';
 import 'HomePage.dart';
 import 'auth.dart';
 import 'joinListPage.dart';
+import 'initialPage.dart';
 
 class NavDrawer extends StatelessWidget
 {
   final BaseAuth auth = Auth();
+
   @override
   Widget build(BuildContext context){
     // forces portrait usage of this page/widget
@@ -34,7 +36,7 @@ class NavDrawer extends StatelessWidget
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) =>  HomePage()));
+                    builder: (context) =>  initialPage(auth: auth)));
               },
             ),
 
