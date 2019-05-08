@@ -6,6 +6,7 @@ import 'AddGiftPage.dart';
 import 'package:gift_tracker/models/Gift.dart';
 import 'auth.dart';
 import 'models/Gift.dart';
+import 'GiftDetailsPage.dart';
 
 enum sortFilter {
   grid,
@@ -98,8 +99,8 @@ class _GiftListPage extends State<GiftListPage> {
     } //else
     print(giftList);
   }
-  buildCards(int index) {
 
+  buildCards(int index) {
     return Card(
       elevation: 2.0,
       color: Colors.deepPurple[50],
@@ -135,36 +136,76 @@ class _GiftListPage extends State<GiftListPage> {
   }
 
   buildCardsGrid(index) {
-    return Card(
-        elevation: 2.0,
-        color: Colors.deepPurple[50],
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                  padding: EdgeInsets.only(bottom: 30.0),
-                  child: Text(
-                    giftList[index].giftName,
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+     return Card(
+      elevation: 2.0,
+      color: Colors.deepPurple[50],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () => showUpdateDialog(giftList[index], index),
+            child: Container(
+              padding: EdgeInsets.only(bottom: 30.0),
+              child: Text(
+                giftList[index].giftName,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+
+          GestureDetector(
+            onTap: () => showUpdateDialog(giftList[index], index),
+            child: Container(
+              //padding: EdgeInsets.only(top: 30.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    "\$${(giftList[index].giftPrice).round()}",
+                    style: TextStyle(fontSize: 15.0),
                   ),
+                  Text(
+                    "${(giftList[index].giftPriority).round()}",
+                    style: TextStyle(fontSize: 15.0),
                   ),
-              Container(
-                //padding: EdgeInsets.only(top: 30.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "\$${(giftList[index].giftPrice).round()}",
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                    Text(
-                      "${(giftList[index].giftPriority).round()}",
-                      style: TextStyle(fontSize: 15.0),
-                    ),
-                  ],
-                )
+                ],
               )
-            ]));
+            )
+          )
+        ]),
+      );
+
+
+//    return Card(
+//        elevation: 2.0,
+//        color: Colors.deepPurple[50],
+//        child: Column(
+//            mainAxisAlignment: MainAxisAlignment.center,
+//            children: <Widget>[
+//              Container(
+//                  padding: EdgeInsets.only(bottom: 30.0),
+//                  child: Text(
+//                    giftList[index].giftName,
+//                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+//                  ),
+//                  ),
+//              Container(
+//                //padding: EdgeInsets.only(top: 30.0),
+//                child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                  children: <Widget>[
+//                    Text(
+//                      "\$${(giftList[index].giftPrice).round()}",
+//                      style: TextStyle(fontSize: 15.0),
+//                    ),
+//                    Text(
+//                      "${(giftList[index].giftPriority).round()}",
+//                      style: TextStyle(fontSize: 15.0),
+//                    ),
+//                  ],
+//                )
+//              )
+//            ]));
   }
 
   buildGrid() {
@@ -177,6 +218,7 @@ class _GiftListPage extends State<GiftListPage> {
       },
     );
   }
+
   updateGift(giftList, index) async
   {
     Gift newGift = new Gift();
@@ -371,43 +413,59 @@ class _GiftListPage extends State<GiftListPage> {
               ],
             ),
             actions: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Column(
                 children: <Widget>[
-
-                  SizedBox(width: 10),
-                  RaisedButton(
-                    child: Text(
-                        "Delete Gift",
-                        style: TextStyle(color: Colors.black)
-                    ),
-                    onPressed: () => deleteGift(giftList, index)
-                  ),
-                  SizedBox(width: 10),
-
-                  SizedBox(width: 10),
-
-                  RaisedButton(
-                      child: Text(
-                          "Update gift",
-                          style: TextStyle(color: Colors.black)
+                  Row(
+                    children: <Widget>[
+                      RaisedButton(
+                          child: Text(
+                              "See Gift Details",
+                              style: TextStyle(color: Colors.black)
+                          ),
+                          onPressed: () => Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) => GiftDetailsPage(gift: giftList)))
                       ),
-                      onPressed: () => updateGift(giftList, index)
+                    ],
                   ),
-                  SizedBox(width: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
 
-                  SizedBox(width: 10),
-                  RaisedButton(
-                    child: Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.black)
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  SizedBox(width: 25),
+                      SizedBox(width: 10),
+                      RaisedButton(
+                        child: Text(
+                            "Delete Gift",
+                            style: TextStyle(color: Colors.black)
+                        ),
+                        onPressed: () => deleteGift(giftList, index)
+                      ),
+                      SizedBox(width: 10),
 
+                      SizedBox(width: 10),
+
+                      RaisedButton(
+                          child: Text(
+                              "Update gift",
+                              style: TextStyle(color: Colors.black)
+                          ),
+                          onPressed: () => updateGift(giftList, index)
+                      ),
+                      SizedBox(width: 10),
+
+                      SizedBox(width: 10),
+                      RaisedButton(
+                        child: Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.black)
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      SizedBox(width: 25),
+
+                    ],
+                  )
                 ],
               )
             ],
